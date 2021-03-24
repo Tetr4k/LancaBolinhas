@@ -8,6 +8,7 @@ struct Objeto{
 };
 
 struct Fase{
+    int angulo;
     struct Objeto bola;
     vector<struct Objeto> alvos;
 };
@@ -28,46 +29,38 @@ int main( int argc, char* args[] ){
     int somImpacto = CriaAudio("..//sounds//soundImpacto.mp3",0);
     SetVolume(somImpacto,25);
 
-    //cria fundo
-    int fundo = CriaSprite("..//img//fundo.png");//provisorio
-    SetDimensoesSprite(fundo, 1280, 720);
-    MoveSprite(fundo, 0, 0);
-
-    //cria modelo da interface
-    int interface = CriaSprite("..//img//interface.png");
-    SetDimensoesSprite(interface, 1280, 100);
-    MoveSprite(interface, 0, 0);
-
     //cria modelo dos alvos
-    int *alvos = (int*) malloc(3*sizeof(int));
-    alvos[0] = CriaObjeto("..//img//alvo.png");
-    SetDimensoesObjeto(alvos[0], 50, 50);
-    alvos[1] = CriaObjeto("..//img//alvo.png");
-    SetDimensoesObjeto(alvos[1], 100, 100);
-    alvos[2] = CriaObjeto("..//img//alvo.png");
-    SetDimensoesObjeto(alvos[2], 200, 200);
+    int *alvos = (int*) malloc(20*sizeof(int));
+    for(int i=0; i<20; i++){
+        alvos[i] = CriaObjeto("..//img//alvo.png");
+        SetDimensoesObjeto(alvos[i], i*5+20, i*5+20);
+    }
 
     //cria modelo das bolas
     int *bolas = (int*) malloc(3*sizeof(int));
     bolas[0] = CriaObjeto("..//img//bola1.png");
-    CarregaArquivoFramesObjeto(bolas[0], "..//img//bola1.txt");
-    SetDimensoesObjeto(bolas[0], 48, 48);
-    MudaFrameObjeto(bolas[0], 1);
     bolas[1] = CriaObjeto("..//img//bola2.png");
-    CarregaArquivoFramesObjeto(bolas[1], "..//img//bola2.txt");
-    SetDimensoesObjeto(bolas[1], 40, 40);
-    MudaFrameObjeto(bolas[1], 1);
     bolas[2] = CriaObjeto("..//img//bola3.png");
-    CarregaArquivoFramesObjeto(bolas[2], "..//img//bola3.txt");
+    SetDimensoesObjeto(bolas[0], 48, 48);
+    SetDimensoesObjeto(bolas[1], 40, 40);
     SetDimensoesObjeto(bolas[2], 40, 40);
+    CarregaArquivoFramesObjeto(bolas[0], "..//img//bola1.txt");
+    CarregaArquivoFramesObjeto(bolas[1], "..//img//bola2.txt");
+    CarregaArquivoFramesObjeto(bolas[2], "..//img//bola3.txt");
+    MudaFrameObjeto(bolas[0], 1);
+    MudaFrameObjeto(bolas[1], 1);
     MudaFrameObjeto(bolas[2], 1);
 
-    /*int seta = CriaSprite("..//img//seta.png");
+
+    /*
+    int seta = CriaSprite("..//img//seta.png");
     MoveSprite(seta,0,0);
     SetDimensoesSprite(seta, 626, 484);
-    SetAnguloSprite(seta,15);*/
+    SetAnguloSprite(seta,15);
+    */
 
     struct Fase fase;
+    fase.angulo = 0;
     int posX, posY, tipo;
     FILE *arq = fopen("../fases/fase1.txt", "r");
     fscanf(arq, "%d %d", &posY, &tipo);
@@ -87,7 +80,7 @@ int main( int argc, char* args[] ){
 
     //loop principal do jogo
 
-    //PlayBackground(); <-- descomentar
+    PlayBackground();
 
     SetTituloJanela("Lanca Bolinhas");
 
@@ -110,20 +103,25 @@ int main( int argc, char* args[] ){
 
         //todas as chamadas de desenho devem ser feitas aqui na ordem desejada
 
-        DesenhaSprite(fundo);
-        DesenhaSprite(interface);
+        //fundo
+        DesenhaSpriteSimples("..//img//fundo.png", 0, 0, 0);
 
+        //interface
+        DesenhaSpriteSimples("..//img//interface.png", 0, 0, 0);
+
+        //posicao atual do objeto
         MoveObjeto(fase.bola.desenho, fase.bola.x, fase.bola.y);
         DesenhaObjeto(fase.bola.desenho);
 
 
         for(int i=0; i<fase.alvos.size(); i++){
-            MoveObjeto(fase.alvos[i].desenho, fase.alvos[i].x, fase.alvos[i].y);
+            MoveObjeto(fase.alvos[i].desenho, fase.alvos[i].y, fase.alvos[i].x);
             DesenhaObjeto(fase.alvos[i].desenho);
         }
 
-
         //DesenhaSprite(seta);
+
+        //DesenhaLinhasSequencia(20, 20, 400, 400, VERDE);
         //PlayAudio(somImpacto);
 
         //o frame totalmente pronto será mostrado na tela
@@ -131,7 +129,6 @@ int main( int argc, char* args[] ){
     }
 
     //o jogo será encerrado
-    printf("fim");
     free(bolas);
     free(alvos);
 

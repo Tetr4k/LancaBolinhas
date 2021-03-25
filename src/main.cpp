@@ -29,7 +29,6 @@ int main( int argc, char* args[] ){
     //associando o teclado (basta uma única vez) com a variável meuTeclado
     meuTeclado = GetTeclado();
 
-
     CarregaBackground("..//sounds//background.mp3");//cria musica de fundo
 
     int somImpacto = CriaAudio("..//sounds//soundImpacto.mp3",0);//cria audio de impacto
@@ -46,27 +45,43 @@ int main( int argc, char* args[] ){
     }
 
     int *bolas = (int*) malloc(3*sizeof(int));//cria modelo das bolas
-    bolas[0] = CriaObjeto("..//img//bola1.png", 0);
-    bolas[1] = CriaObjeto("..//img//bola2.png", 0);
-    bolas[2] = CriaObjeto("..//img//bola3.png", 0);
-    SetDimensoesObjeto(bolas[0], 48, 48);
-    SetDimensoesObjeto(bolas[1], 40, 40);
-    SetDimensoesObjeto(bolas[2], 40, 40);
-    SetPivoAbsolutoObjeto(bolas[0], 24, 24);
-    SetPivoAbsolutoObjeto(bolas[1], 20, 20);
-    SetPivoAbsolutoObjeto(bolas[2], 20, 20);
-    DefineRaioColisaoObjeto(bolas[0], 24);
-    DefineRaioColisaoObjeto(bolas[1], 20);
-    DefineRaioColisaoObjeto(bolas[2], 20);
-    DefineTipoColisaoObjeto(bolas[0], PIG_COLISAO_CIRCULAR);
-    DefineTipoColisaoObjeto(bolas[1], PIG_COLISAO_CIRCULAR);
-    DefineTipoColisaoObjeto(bolas[2], PIG_COLISAO_CIRCULAR);
-    CarregaArquivoFramesObjeto(bolas[0], "..//img//bola1.txt");
-    CarregaArquivoFramesObjeto(bolas[1], "..//img//bola2.txt");
-    CarregaArquivoFramesObjeto(bolas[2], "..//img//bola3.txt");
-    MudaFrameObjeto(bolas[0], 1);
-    MudaFrameObjeto(bolas[1], 1);
-    MudaFrameObjeto(bolas[2], 1);
+    bolas[0] = CriaAnimacao("..//img//bola1.png", 0);
+    bolas[1] = CriaAnimacao("..//img//bola2.png", 0);
+    bolas[2] = CriaAnimacao("..//img//bola3.png", 0);
+    SetDimensoesAnimacao(bolas[0], 48, 48);
+    SetDimensoesAnimacao(bolas[1], 40, 40);
+    SetDimensoesAnimacao(bolas[2], 40, 40);
+    SetPivoAbsolutoAnimacao(bolas[0], 24, 24);
+    SetPivoAbsolutoAnimacao(bolas[1], 20, 20);
+    SetPivoAbsolutoAnimacao(bolas[2], 20, 20);
+    DefineRaioColisaoAnimacao(bolas[0], 24);
+    DefineRaioColisaoAnimacao(bolas[1], 20);
+    DefineRaioColisaoAnimacao(bolas[2], 20);
+    DefineTipoColisaoAnimacao(bolas[0], PIG_COLISAO_CIRCULAR);
+    DefineTipoColisaoAnimacao(bolas[1], PIG_COLISAO_CIRCULAR);
+    DefineTipoColisaoAnimacao(bolas[2], PIG_COLISAO_CIRCULAR);
+    CarregaFramesPorLinhaAnimacao(bolas[0], 1, 1, 10);
+    CarregaFramesPorLinhaAnimacao(bolas[1], 1, 1, 10);
+    CarregaFramesPorLinhaAnimacao(bolas[2], 1, 1, 10);
+
+    CriaModoAnimacao(bolas[0], 0, 1);//animação bola parada
+    CriaModoAnimacao(bolas[1], 0, 1);
+    CriaModoAnimacao(bolas[2], 0, 1);
+    InsereFrameAnimacao(bolas[0], 0, 1, 0.05);
+    InsereFrameAnimacao(bolas[1], 0, 1, 0.05);
+    InsereFrameAnimacao(bolas[2], 0, 1, 0.05);
+    MudaModoAnimacao(bolas[0], 0, 0);
+    MudaModoAnimacao(bolas[1], 0, 0);
+    MudaModoAnimacao(bolas[2], 0, 0);
+
+    CriaModoAnimacao(bolas[0], 1, 1);//animação bola em movimento
+    CriaModoAnimacao(bolas[1], 1, 1);
+    CriaModoAnimacao(bolas[2], 1, 1);
+    for(int i=0; i<10; i++){
+        InsereFrameAnimacao(bolas[0], 1, i+1, 0.05);
+        InsereFrameAnimacao(bolas[1], 1, i+1, 0.05);
+        InsereFrameAnimacao(bolas[2], 1, i+1, 0.05);
+    }
 
     int seta = CriaSprite("..//img//seta.png", 0);//cria seta
     SetDimensoesSprite(seta, 40, 120);
@@ -77,7 +92,7 @@ int main( int argc, char* args[] ){
     double yInicial;
     FILE *arq = fopen("../fases/fase1.txt", "r");
     fscanf(arq, "%d %d", &posY, &tipo);
-    fase.bola.desenho = CriaObjeto(bolas[tipo], 0);
+    fase.bola.desenho = CriaAnimacao(bolas[tipo], 0);
     fase.bola.g = COEFICIENTE_PESO*(tipo+1);
     fase.bola.x = fase.bola.xi = D_ESQUERDA;
     fase.bola.y = fase.bola.yi = posY+D_BAIXO;
@@ -109,19 +124,20 @@ int main( int argc, char* args[] ){
 
         //aqui o evento deve ser tratado e as coisas devem ser atualizadas
 
-        for(int i=0; i<fase.alvos.size(); i++) if(TestaColisaoObjetos(fase.bola.desenho, fase.alvos[i])){//teste de colisão
+        for(int i=0; i<fase.alvos.size(); i++) if(TestaColisaoAnimacaoObjeto(fase.bola.desenho, fase.alvos[i])){//teste de colisão
             PlayAudio(somImpacto);
             //quebra e fim de fase;
         }
 
         if(evento.tipoEvento == PIG_EVENTO_TECLADO){
-            if(evento.teclado.tecla == PIG_TECLA_BARRAESPACO) DespausaTimer(timer);//verifica se espaço foi apertado para arremessar bolinha
+            if(evento.teclado.tecla == PIG_TECLA_BARRAESPACO){//verifica se espaço foi apertado para arremessar bolinha
+                    DespausaTimer(timer);
+                    MudaModoAnimacao(fase.bola.desenho, 1, 0);
+            }
 
-            if(evento.teclado.acao == PIG_TECLA_PRESSIONADA){//ajusta angulo com setinhas
-                if(evento.teclado.tecla == PIG_TECLA_CIMA)
-                    if(fase.angulo<90) fase.angulo++;
-                if(evento.teclado.tecla == PIG_TECLA_BAIXO)
-                    if(fase.angulo>-90) fase.angulo--;
+            if(evento.teclado.acao == PIG_TECLA_PRESSIONADA){//ajusta angulo usando as setas
+                if(evento.teclado.tecla == PIG_TECLA_CIMA && fase.angulo<89) fase.angulo++;
+                if(evento.teclado.tecla == PIG_TECLA_BAIXO && fase.angulo>-89) fase.angulo--;
             }
         }
 
@@ -129,7 +145,7 @@ int main( int argc, char* args[] ){
         fase.bola.y = fase.bola.yi + VELOCIDADE*sin(fase.angulo*M_PI/180.0)*t-fase.bola.g*pow(t, 2)/2;//calcula y
         fase.bola.x = fase.bola.xi + VELOCIDADE*cos(fase.angulo*M_PI/180.0)*t;//calcula x
 
-        MoveObjeto(fase.bola.desenho, fase.bola.x, fase.bola.y);//atualiza posição do objeto
+        MoveAnimacao(fase.bola.desenho, fase.bola.x, fase.bola.y);//atualiza posição do objeto
 
         if(fase.bola.y<0) break;//testa altura da bolinha
 
@@ -139,22 +155,23 @@ int main( int argc, char* args[] ){
         //todas as chamadas de desenho devem ser feitas aqui na ordem desejada
 
         DesenhaSpriteSimples("..//img//fundo.png", 0, 0, 0);//fundo
-        DesenhaSpriteSimples("..//img//interface.png", 0, 0, 0);//interface
 
         SetAnguloSprite(seta, fase.angulo);//ajusta angulo da seta <---- Não funciona
         DesenhaSprite(seta);//desenha a seta
         //DesenhaLinhasSequencia(20, 20, 400, 400, VERDE);
 
         for(int i=0; i<fase.alvos.size(); i++) DesenhaObjeto(fase.alvos[i]);//alvos
-        DesenhaObjeto(fase.bola.desenho);//bola
+        DesenhaAnimacao(fase.bola.desenho);//bola
 
+        DesenhaSpriteSimples("..//img//interface.png", 0, 0, 0);//interface
         EscreveInteiroCentralizado(fase.angulo, 640, 0, AZUL);//escreve o angulo na tela
+
         //Indicar que é angulo
         //Indicar que deve usar as setinhas para aumentar e diminuir
         //Indicar que deve usar espaço para lançar bola
         //Fixar camera na bola?
         //Passar de fase
-        //Destruir alvo e particulas
+        //Destruir alvo e gerar particulas
 
         //o frame totalmente pronto será mostrado na tela
         EncerraDesenho();

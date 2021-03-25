@@ -64,8 +64,8 @@ int main( int argc, char* args[] ){
     MudaFrameObjeto(bolas[2], 1);
 
     int seta = CriaSprite("..//img//seta.png", 0);//cria seta
-    SetDimensoesSprite(seta, 40, 120);
-    SetPivoAbsolutoSprite(seta, 20, 0);
+    SetDimensoesSprite(seta, 60, 40);
+    SetPivoAbsolutoSprite(seta, 30, 0);
 
     struct Fase fase;//leitura da fase
     int posX, posY, tipo;

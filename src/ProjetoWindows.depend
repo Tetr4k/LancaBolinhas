@@ -1,8 +1,8 @@
 # depslib dependency file v1.0
-1616618873 source:d:\projetos\lancabolinhas\src\main.cpp
+1616635633 source:d:\projetos\lancabolinhas\src\main.cpp
 	"PIG.h"
 
-1616074882 d:\projetos\lancabolinhas\include\pig.h
+1616624336 d:\projetos\lancabolinhas\include\pig.h
 	"SDL.h"
 	"SDL_ttf.h"
 	"SDL_image.h"
@@ -26,7 +26,7 @@
 	"CPIGGerenciadorForms.h"
 	"CPIGJogo.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl.h
+1614882467 d:\projetos\lancabolinhas\include\sdl\sdl.h
 	"SDL_main.h"
 	"SDL_stdinc.h"
 	"SDL_assert.h"
@@ -58,12 +58,12 @@
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_main.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_main.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_stdinc.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_stdinc.h
 	"SDL_config.h"
 	<sys/types.h>
 	<stdio.h>
@@ -92,34 +92,34 @@
 	<stdlib.h>
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_config.h
+1614882467 d:\projetos\lancabolinhas\include\sdl\sdl_config.h
 	"SDL_platform.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_platform.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_platform.h
 	"AvailabilityMacros.h"
 	"TargetConditionals.h"
 	<winapifamily.h>
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\begin_code.h
+1614882467 d:\projetos\lancabolinhas\include\sdl\begin_code.h
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\close_code.h
+1614882467 d:\projetos\lancabolinhas\include\sdl\close_code.h
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_assert.h
+1614882467 d:\projetos\lancabolinhas\include\sdl\sdl_assert.h
 	"SDL_config.h"
 	"begin_code.h"
 	<signal.h>
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_atomic.h
+1614882467 d:\projetos\lancabolinhas\include\sdl\sdl_atomic.h
 	"SDL_stdinc.h"
 	"SDL_platform.h"
 	"begin_code.h"
 	<mbarrier.h>
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_audio.h
+1614882467 d:\projetos\lancabolinhas\include\sdl\sdl_audio.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_endian.h"
@@ -129,24 +129,24 @@
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_error.h
+1614882467 d:\projetos\lancabolinhas\include\sdl\sdl_error.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_endian.h
+1614882467 d:\projetos\lancabolinhas\include\sdl\sdl_endian.h
 	"SDL_stdinc.h"
 	<endian.h>
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_mutex.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_mutex.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_thread.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_thread.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_atomic.h"
@@ -157,18 +157,18 @@
 	<stdlib.h>
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_rwops.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_rwops.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_clipboard.h
+1614882467 d:\projetos\lancabolinhas\include\sdl\sdl_clipboard.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_cpuinfo.h
+1614882467 d:\projetos\lancabolinhas\include\sdl\sdl_cpuinfo.h
 	"SDL_stdinc.h"
 	<intrin.h>
 	<intrin.h>
@@ -182,7 +182,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_events.h
+1614882467 d:\projetos\lancabolinhas\include\sdl\sdl_events.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_video.h"
@@ -196,7 +196,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_video.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_video.h
 	"SDL_stdinc.h"
 	"SDL_pixels.h"
 	"SDL_rect.h"
@@ -204,13 +204,13 @@
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_pixels.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_pixels.h
 	"SDL_stdinc.h"
 	"SDL_endian.h"
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_rect.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_rect.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_pixels.h"
@@ -218,7 +218,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_surface.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_surface.h
 	"SDL_stdinc.h"
 	"SDL_pixels.h"
 	"SDL_rect.h"
@@ -227,11 +227,11 @@
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_blendmode.h
+1614882467 d:\projetos\lancabolinhas\include\sdl\sdl_blendmode.h
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_keyboard.h
+1614882467 d:\projetos\lancabolinhas\include\sdl\sdl_keyboard.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_keycode.h"
@@ -239,27 +239,27 @@
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_keycode.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_keycode.h
 	"SDL_stdinc.h"
 	"SDL_scancode.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_scancode.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_scancode.h
 	"SDL_stdinc.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_mouse.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_mouse.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_joystick.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_joystick.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_gamecontroller.h
+1614882467 d:\projetos\lancabolinhas\include\sdl\sdl_gamecontroller.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_rwops.h"
@@ -267,11 +267,11 @@
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_quit.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_quit.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_gesture.h
+1614882467 d:\projetos\lancabolinhas\include\sdl\sdl_gesture.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_video.h"
@@ -279,60 +279,60 @@
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_touch.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_touch.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_filesystem.h
+1614882467 d:\projetos\lancabolinhas\include\sdl\sdl_filesystem.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_haptic.h
+1614882467 d:\projetos\lancabolinhas\include\sdl\sdl_haptic.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_joystick.h"
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_hints.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_hints.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_loadso.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_loadso.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_log.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_log.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_messagebox.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_messagebox.h
 	"SDL_stdinc.h"
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_power.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_power.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_render.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_render.h
 	"SDL_stdinc.h"
 	"SDL_rect.h"
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_shape.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_shape.h
 	"SDL_stdinc.h"
 	"SDL_pixels.h"
 	"SDL_rect.h"
@@ -341,7 +341,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_system.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_system.h
 	"SDL_stdinc.h"
 	"SDL_keyboard.h"
 	"SDL_render.h"
@@ -349,29 +349,29 @@
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_timer.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_timer.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_version.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_version.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_ttf.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_ttf.h
 	"SDL.h"
 	"begin_code.h"
 	"close_code.h"
 
-1616074883 d:\projetos\lancabolinhas\include\sdl_image\sdl_image.h
+1614882468 d:\projetos\lancabolinhas\include\sdl_image\sdl_image.h
 	"SDL.h"
 	"SDL_version.h"
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_net.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_net.h
 	<stdint.h>
 	"SDL.h"
 	"SDL_endian.h"
@@ -379,7 +379,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\sdl\sdl_mixer.h
+1614882468 d:\projetos\lancabolinhas\include\sdl\sdl_mixer.h
 	"SDL_stdinc.h"
 	"SDL_rwops.h"
 	"SDL_audio.h"
@@ -388,11 +388,11 @@
 	"begin_code.h"
 	"close_code.h"
 
-1616074882 d:\projetos\lancabolinhas\include\pigtipos.h
+1616624336 d:\projetos\lancabolinhas\include\pigtipos.h
 	"direct.h"
 	"unistd.h"
 
-1616074882 d:\projetos\lancabolinhas\include\pigfuncoesbasicas.h
+1614882467 d:\projetos\lancabolinhas\include\pigfuncoesbasicas.h
 	<stdio.h>
 	<stdlib.h>
 	<math.h>
@@ -412,101 +412,101 @@
 	<stdint.h>
 	<limits.h>
 
-1616074882 d:\projetos\lancabolinhas\include\cpigerros.h
+1614882467 d:\projetos\lancabolinhas\include\cpigerros.h
 
-1616074882 d:\projetos\lancabolinhas\include\cpigrepositorio.h
+1614882467 d:\projetos\lancabolinhas\include\cpigrepositorio.h
 
-1616074882 d:\projetos\lancabolinhas\include\cpiggerenciadortimers.h
+1614882467 d:\projetos\lancabolinhas\include\cpiggerenciadortimers.h
 	"CPIGTimer.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigtimer.h
+1614882467 d:\projetos\lancabolinhas\include\cpigtimer.h
 	<chrono>
 
-1616074882 d:\projetos\lancabolinhas\include\cpigassetloader.h
+1614882467 d:\projetos\lancabolinhas\include\cpigassetloader.h
 
-1616074882 d:\projetos\lancabolinhas\include\cpigoffscreenrenderer.h
+1614882467 d:\projetos\lancabolinhas\include\cpigoffscreenrenderer.h
 	"CPIGPilhaCoordenada.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigpilhacoordenada.h
+1614882467 d:\projetos\lancabolinhas\include\cpigpilhacoordenada.h
 
-1616074882 d:\projetos\lancabolinhas\include\cpiggerenciadoraudios.h
+1614882467 d:\projetos\lancabolinhas\include\cpiggerenciadoraudios.h
 	"CPIGAudio.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigaudio.h
+1614882467 d:\projetos\lancabolinhas\include\cpigaudio.h
 
-1616074882 d:\projetos\lancabolinhas\include\cpiggerenciadorjanelas.h
+1614882467 d:\projetos\lancabolinhas\include\cpiggerenciadorjanelas.h
 	"CPIGJanela.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigjanela.h
+1614882467 d:\projetos\lancabolinhas\include\cpigjanela.h
 	"CPIGCamera.h"
 	"CPIGOffscreenRenderer.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigcamera.h
+1614882467 d:\projetos\lancabolinhas\include\cpigcamera.h
 
-1616074882 d:\projetos\lancabolinhas\include\cpiggerenciadorsockets.h
+1614882467 d:\projetos\lancabolinhas\include\cpiggerenciadorsockets.h
 	"CPIGClienteTCP.h"
 	"CPIGServidorTCP.h"
 	"CPIGSocketUDP.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigclientetcp.h
+1614882467 d:\projetos\lancabolinhas\include\cpigclientetcp.h
 	"CPIGSocketTCP.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigsockettcp.h
+1614882467 d:\projetos\lancabolinhas\include\cpigsockettcp.h
 
-1616074882 d:\projetos\lancabolinhas\include\cpigservidortcp.h
+1614882467 d:\projetos\lancabolinhas\include\cpigservidortcp.h
 	"CPIGSocketTCP.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigsocketudp.h
+1614882467 d:\projetos\lancabolinhas\include\cpigsocketudp.h
 
-1616074882 d:\projetos\lancabolinhas\include\cpiggerenciadorfontes.h
+1614882467 d:\projetos\lancabolinhas\include\cpiggerenciadorfontes.h
 	"CPIGMapaCaracteres.h"
 	"CPIGMapaCaracteresDinamicos.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigmapacaracteres.h
+1614882467 d:\projetos\lancabolinhas\include\cpigmapacaracteres.h
 
-1616074882 d:\projetos\lancabolinhas\include\cpigmapacaracteresdinamicos.h
+1614882467 d:\projetos\lancabolinhas\include\cpigmapacaracteresdinamicos.h
 	"CPIGStringFormatada.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigstringformatada.h
+1614882467 d:\projetos\lancabolinhas\include\cpigstringformatada.h
 
-1616074882 d:\projetos\lancabolinhas\include\cpiggerenciadorsprites.h
+1614882467 d:\projetos\lancabolinhas\include\cpiggerenciadorsprites.h
 	"CPIGSprite.h"
 	"CPIGObjeto.h"
 	"CPIGAnimacao.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigsprite.h
+1614882467 d:\projetos\lancabolinhas\include\cpigsprite.h
 	"CPIGAutomacao.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigautomacao.h
+1614882823 d:\projetos\lancabolinhas\include\cpigautomacao.h
 	"CPIGTransicao.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigtransicao.h
+1614882467 d:\projetos\lancabolinhas\include\cpigtransicao.h
 
-1616074882 d:\projetos\lancabolinhas\include\cpigobjeto.h
+1614882467 d:\projetos\lancabolinhas\include\cpigobjeto.h
 	"CPIGAtributos.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigatributos.h
+1614882467 d:\projetos\lancabolinhas\include\cpigatributos.h
 
-1616074882 d:\projetos\lancabolinhas\include\cpiganimacao.h
+1614882823 d:\projetos\lancabolinhas\include\cpiganimacao.h
 	"CPIGModoAnimacao.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigmodoanimacao.h
+1614882823 d:\projetos\lancabolinhas\include\cpigmodoanimacao.h
 
-1616074882 d:\projetos\lancabolinhas\include\cpiggerenciadorgdp.h
+1614882467 d:\projetos\lancabolinhas\include\cpiggerenciadorgdp.h
 	"CPIGAnimacao.h"
 	"CPIGGeradorParticulas.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpiggeradorparticulas.h
+1614882467 d:\projetos\lancabolinhas\include\cpiggeradorparticulas.h
 	"CPIGParticula.h"
 	"CPIGAnimacao.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigparticula.h
+1614882467 d:\projetos\lancabolinhas\include\cpigparticula.h
 	"CPIGAnimacao.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpiggerenciadorvideos.h
+1614882467 d:\projetos\lancabolinhas\include\cpiggerenciadorvideos.h
 	"CPIGVideo.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigvideo.h
+1614882467 d:\projetos\lancabolinhas\include\cpigvideo.h
 	<libavfilter/avfilter.h>
 	<libavformat/avformat.h>
 	<libavcodec/avcodec.h>
@@ -518,7 +518,7 @@
 	<libswscale/swscale.h>
 	"CPIGFilaPacotes.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavfilter\avfilter.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavfilter\avfilter.h
 	<stddef.h>
 	"libavutil/attributes.h"
 	"libavutil/avutil.h"
@@ -531,9 +531,9 @@
 	"libavutil/rational.h"
 	"libavfilter/version.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\attributes.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\attributes.h
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\avutil.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\avutil.h
 	"common.h"
 	"error.h"
 	"rational.h"
@@ -543,7 +543,7 @@
 	"log.h"
 	"pixfmt.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\common.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\common.h
 	<errno.h>
 	<inttypes.h>
 	<limits.h>
@@ -562,58 +562,58 @@
 	"mem.h"
 	"internal.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\macros.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\macros.h
 
-1616074884 d:\projetos\lancabolinhas\include\video\libavutil\version.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\version.h
 	"macros.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\avconfig.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\avconfig.h
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\mem.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\mem.h
 	<limits.h>
 	<stdint.h>
 	"attributes.h"
 	"error.h"
 	"avutil.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\error.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\error.h
 	<errno.h>
 	<stddef.h>
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\rational.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\rational.h
 	<stdint.h>
 	<limits.h>
 	"attributes.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\mathematics.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\mathematics.h
 	<stdint.h>
 	<math.h>
 	"attributes.h"
 	"rational.h"
 	"intfloat.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\intfloat.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\intfloat.h
 	<stdint.h>
 	"attributes.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\log.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\log.h
 	<stdarg.h>
 	"avutil.h"
 	"attributes.h"
 	"version.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\pixfmt.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\pixfmt.h
 	"libavutil/avconfig.h"
 	"version.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\buffer.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\buffer.h
 	<stdint.h>
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\dict.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\dict.h
 	<stdint.h>
 	"version.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\frame.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\frame.h
 	<stddef.h>
 	<stdint.h>
 	"avutil.h"
@@ -624,15 +624,15 @@
 	"pixfmt.h"
 	"version.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\samplefmt.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\samplefmt.h
 	<stdint.h>
 	"avutil.h"
 	"attributes.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavfilter\version.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavfilter\version.h
 	"libavutil/version.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavformat\avformat.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavformat\avformat.h
 	<time.h>
 	<stdio.h>
 	"libavcodec/avcodec.h"
@@ -641,7 +641,7 @@
 	"avio.h"
 	"libavformat/version.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavcodec\avcodec.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavcodec\avcodec.h
 	<errno.h>
 	"libavutil/samplefmt.h"
 	"libavutil/attributes.h"
@@ -657,43 +657,43 @@
 	"libavutil/rational.h"
 	"version.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\cpu.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\cpu.h
 	<stddef.h>
 	"attributes.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\channel_layout.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\channel_layout.h
 	<stdint.h>
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\hwcontext.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\hwcontext.h
 	"buffer.h"
 	"frame.h"
 	"log.h"
 	"pixfmt.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavcodec\version.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavcodec\version.h
 	"libavutil/version.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavformat\avio.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavformat\avio.h
 	<stdint.h>
 	"libavutil/common.h"
 	"libavutil/dict.h"
 	"libavutil/log.h"
 	"libavformat/version.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavformat\version.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavformat\version.h
 	"libavutil/version.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavdevice\avdevice.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavdevice\avdevice.h
 	"version.h"
 	"libavutil/log.h"
 	"libavutil/opt.h"
 	"libavutil/dict.h"
 	"libavformat/avformat.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavdevice\version.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavdevice\version.h
 	"libavutil/version.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\opt.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\opt.h
 	"rational.h"
 	"avutil.h"
 	"dict.h"
@@ -702,56 +702,56 @@
 	"samplefmt.h"
 	"version.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\imgutils.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\imgutils.h
 	"avutil.h"
 	"pixdesc.h"
 	"rational.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\pixdesc.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\pixdesc.h
 	<inttypes.h>
 	"attributes.h"
 	"pixfmt.h"
 	"version.h"
 
-1616074883 d:\projetos\lancabolinhas\include\video\libavutil\avstring.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\avstring.h
 	<stddef.h>
 	<stdint.h>
 	"attributes.h"
 
-1616074884 d:\projetos\lancabolinhas\include\video\libavutil\time.h
+1614882468 d:\projetos\lancabolinhas\include\video\libavutil\time.h
 	<stdint.h>
 
-1616074884 d:\projetos\lancabolinhas\include\video\libswresample\swresample.h
+1614882468 d:\projetos\lancabolinhas\include\video\libswresample\swresample.h
 	<stdint.h>
 	"libavutil/channel_layout.h"
 	"libavutil/frame.h"
 	"libavutil/samplefmt.h"
 	"libswresample/version.h"
 
-1616074884 d:\projetos\lancabolinhas\include\video\libswresample\version.h
+1614882468 d:\projetos\lancabolinhas\include\video\libswresample\version.h
 	"libavutil/avutil.h"
 
-1616074884 d:\projetos\lancabolinhas\include\video\libswscale\swscale.h
+1614882468 d:\projetos\lancabolinhas\include\video\libswscale\swscale.h
 	<stdint.h>
 	"libavutil/avutil.h"
 	"libavutil/log.h"
 	"libavutil/pixfmt.h"
 	"version.h"
 
-1616074884 d:\projetos\lancabolinhas\include\video\libswscale\version.h
+1614882468 d:\projetos\lancabolinhas\include\video\libswscale\version.h
 	"libavutil/version.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigfilapacotes.h
+1614882467 d:\projetos\lancabolinhas\include\cpigfilapacotes.h
 
-1616074882 d:\projetos\lancabolinhas\include\cpiggerenciadorcontroles.h
+1614882467 d:\projetos\lancabolinhas\include\cpiggerenciadorcontroles.h
 	"CPIGControle.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigcontrole.h
+1614882467 d:\projetos\lancabolinhas\include\cpigcontrole.h
 
-1616074882 d:\projetos\lancabolinhas\include\cpiggerenciadorforms.h
+1614882467 d:\projetos\lancabolinhas\include\cpiggerenciadorforms.h
 	"CPIGForm.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigform.h
+1614882467 d:\projetos\lancabolinhas\include\cpigform.h
 	"CPIGComponente.h"
 	"CPIGBotao.h"
 	"CPIGScrollBar.h"
@@ -764,56 +764,56 @@
 	"CPIGGauge.h"
 	"CPIGGaugeCircular.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigcomponente.h
+1614882467 d:\projetos\lancabolinhas\include\cpigcomponente.h
 	"CPIGLabel.h"
 	"CPIGMouse.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpiglabel.h
+1614882467 d:\projetos\lancabolinhas\include\cpiglabel.h
 	"CPIGSprite.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigmouse.h
+1614882467 d:\projetos\lancabolinhas\include\cpigmouse.h
 	"CPIGSprite.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigbotao.h
+1614882467 d:\projetos\lancabolinhas\include\cpigbotao.h
 	"CPIGComponente.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigscrollbar.h
+1614882467 d:\projetos\lancabolinhas\include\cpigscrollbar.h
 	"CPIGComponente.h"
 	"CPIGBotao.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigcampotextoesenha.h
+1614882467 d:\projetos\lancabolinhas\include\cpigcampotextoesenha.h
 	"CPIGCaixaTexto.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigcaixatexto.h
+1614882467 d:\projetos\lancabolinhas\include\cpigcaixatexto.h
 	"CPIGComponente.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigareadetexto.h
+1614882467 d:\projetos\lancabolinhas\include\cpigareadetexto.h
 	"CPIGCaixaTexto.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigradiobox.h
+1614882467 d:\projetos\lancabolinhas\include\cpigradiobox.h
 	"CPIGListaItemComponente.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpiglistaitemcomponente.h
+1614882467 d:\projetos\lancabolinhas\include\cpiglistaitemcomponente.h
 	"CPIGItemComponente.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigitemcomponente.h
+1614882467 d:\projetos\lancabolinhas\include\cpigitemcomponente.h
 	"CPIGSprite.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigcheckbox.h
+1614882467 d:\projetos\lancabolinhas\include\cpigcheckbox.h
 	"CPIGListaItemComponente.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpiglistbox.h
+1614882467 d:\projetos\lancabolinhas\include\cpiglistbox.h
 	"CPIGListaItemComponente.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigdropdown.h
+1614882467 d:\projetos\lancabolinhas\include\cpigdropdown.h
 	"CPIGListaItemComponente.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpiggauge.h
+1614882467 d:\projetos\lancabolinhas\include\cpiggauge.h
 	"CPIGComponente.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpiggaugecircular.h
+1614882467 d:\projetos\lancabolinhas\include\cpiggaugecircular.h
 	"CPIGComponente.h"
 
-1616074882 d:\projetos\lancabolinhas\include\cpigjogo.h
+1614882467 d:\projetos\lancabolinhas\include\cpigjogo.h
 	"CPIGAtributos.h"
 

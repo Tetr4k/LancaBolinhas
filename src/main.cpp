@@ -3,6 +3,11 @@
 PIG_Evento evento;          //evento ser tratadoi a cada pssada do loop principal
 PIG_Teclado meuTeclado;     //variável como mapeamento do teclado
 
+#define COEFICIENTE_PESO 100
+#define VELOCIDADE 500
+#define D_ESQUERDA 20
+#define D_BAIXO 100
+
 struct Objeto{
     double x, y, xi, yi, g;
     int desenho;
@@ -28,11 +33,11 @@ int main( int argc, char* args[] ){
     CarregaBackground("..//sounds//background.mp3");//cria musica de fundo
 
     int somImpacto = CriaAudio("..//sounds//soundImpacto.mp3",0);//cria audio de impacto
-    SetVolume(somImpacto, 1);//isso funciona?
+    SetVolume(somImpacto, 1);
 
     int *alvos = (int*) malloc(20*sizeof(int));//cria modelo dos alvos
     for(int i=0; i<20; i++){
-        alvos[i] = CriaObjeto("..//img//alvo.png");
+        alvos[i] = CriaObjeto("..//img//alvo.png", 0);
         int tam = i*5+20;
         SetDimensoesObjeto(alvos[i], tam, tam);
         SetPivoAbsolutoObjeto(alvos[i], tam/2, tam/2);
@@ -41,9 +46,9 @@ int main( int argc, char* args[] ){
     }
 
     int *bolas = (int*) malloc(3*sizeof(int));//cria modelo das bolas
-    bolas[0] = CriaObjeto("..//img//bola1.png");
-    bolas[1] = CriaObjeto("..//img//bola2.png");
-    bolas[2] = CriaObjeto("..//img//bola3.png");
+    bolas[0] = CriaObjeto("..//img//bola1.png", 0);
+    bolas[1] = CriaObjeto("..//img//bola2.png", 0);
+    bolas[2] = CriaObjeto("..//img//bola3.png", 0);
     SetDimensoesObjeto(bolas[0], 48, 48);
     SetDimensoesObjeto(bolas[1], 40, 40);
     SetDimensoesObjeto(bolas[2], 40, 40);
@@ -72,14 +77,14 @@ int main( int argc, char* args[] ){
     double yInicial;
     FILE *arq = fopen("../fases/fase1.txt", "r");
     fscanf(arq, "%d %d", &posY, &tipo);
-    fase.bola.desenho = CriaObjeto(bolas[tipo]);
-    fase.bola.g = 50*(tipo+1);
-    fase.bola.x = fase.bola.xi = 10;
-    fase.bola.y = fase.bola.yi = posY+100;
+    fase.bola.desenho = CriaObjeto(bolas[tipo], 0);
+    fase.bola.g = COEFICIENTE_PESO*(tipo+1);
+    fase.bola.x = fase.bola.xi = D_ESQUERDA;
+    fase.bola.y = fase.bola.yi = posY+D_BAIXO;
     fase.angulo = 0;
     while(!feof(arq)){
         fscanf(arq, "%d %d %d", &posX, &posY, &tipo);
-        int alvo = CriaObjeto(alvos[tipo]);
+        int alvo = CriaObjeto(alvos[tipo], 0);
         MoveObjeto(alvo, posY, posX);
         fase.alvos.push_back(alvo);
     }
@@ -87,6 +92,7 @@ int main( int argc, char* args[] ){
 
     MoveSprite(seta, fase.bola.x, fase.bola.y);
     SetPivoAbsolutoSprite(seta, fase.bola.x, fase.bola.y);
+
     //loop principal do jogo
 
     PlayBackground();
@@ -120,8 +126,8 @@ int main( int argc, char* args[] ){
         }
 
         t=TempoDecorrido(timer);
-        fase.bola.y = fase.bola.yi + 250*sin(fase.angulo*M_PI/180.0)*t-fase.bola.g*pow(t, 2)/2;//calcula y
-        fase.bola.x = fase.bola.xi + 250*cos(fase.angulo*M_PI/180.0)*t;//calcula x
+        fase.bola.y = fase.bola.yi + VELOCIDADE*sin(fase.angulo*M_PI/180.0)*t-fase.bola.g*pow(t, 2)/2;//calcula y
+        fase.bola.x = fase.bola.xi + VELOCIDADE*cos(fase.angulo*M_PI/180.0)*t;//calcula x
 
         MoveObjeto(fase.bola.desenho, fase.bola.x, fase.bola.y);//atualiza posição do objeto
 
@@ -135,7 +141,7 @@ int main( int argc, char* args[] ){
         DesenhaSpriteSimples("..//img//fundo.png", 0, 0, 0);//fundo
         DesenhaSpriteSimples("..//img//interface.png", 0, 0, 0);//interface
 
-        SetAnguloSprite(seta, fase.angulo);//ajusta angulo da seta <----Não funciona
+        SetAnguloSprite(seta, fase.angulo);//ajusta angulo da seta <---- Não funciona
         DesenhaSprite(seta);//desenha a seta
         //DesenhaLinhasSequencia(20, 20, 400, 400, VERDE);
 
@@ -143,6 +149,12 @@ int main( int argc, char* args[] ){
         DesenhaObjeto(fase.bola.desenho);//bola
 
         EscreveInteiroCentralizado(fase.angulo, 640, 0, AZUL);//escreve o angulo na tela
+        //Indicar que é angulo
+        //Indicar que deve usar as setinhas para aumentar e diminuir
+        //Indicar que deve usar espaço para lançar bola
+        //Fixar camera na bola?
+        //Passar de fase
+        //Destruir alvo e particulas
 
         //o frame totalmente pronto será mostrado na tela
         EncerraDesenho();

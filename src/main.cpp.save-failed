@@ -163,7 +163,7 @@ int main( int argc, char* args[] ){
     SetTituloJanela("Lanca Bolinhas");
 
     int timer = CriaTimer(1);
-    double t;
+    double t=0;
 
     fase.trajeto = calculaTrajeto(fase);
 
@@ -184,16 +184,15 @@ int main( int argc, char* args[] ){
         if(evento.tipoEvento == PIG_EVENTO_TECLADO){
             if(evento.teclado.tecla == PIG_TECLA_BARRAESPACO){//verifica se espaço foi apertado para arremessar bolinha
                     DespausaTimer(timer);
-                    DestroiSprite(seta);
                     MudaModoAnimacao(fase.bola.desenho, 1, 0);
             }
 
-            if(evento.teclado.acao == PIG_TECLA_PRESSIONADA){//ajusta angulo usando as setas
-                if(evento.teclado.tecla == PIG_TECLA_CIMA && fase.angulo<89){
+            if(evento.teclado.acao == PIG_TECLA_PRESSIONADA && t==0){//ajusta angulo usando as setas
+                if(evento.teclado.tecla == PIG_TECLA_CIMA && fase.angulo<89.9){
                     fase.angulo+=0.2;
                     fase.trajeto = calculaTrajeto(fase);
                 }
-                if(evento.teclado.tecla == PIG_TECLA_BAIXO && fase.angulo>-89){
+                if(evento.teclado.tecla == PIG_TECLA_BAIXO && fase.angulo>-89.9){
                     fase.angulo-=0.2;
                     fase.trajeto = calculaTrajeto(fase);
                 }
@@ -202,7 +201,8 @@ int main( int argc, char* args[] ){
 
 
         if(fase.bola.y<D_BAIXO/2) {
-            break;//testa altura da bolinha
+            if(fase.alvos.size()==0) printf("Jogo ganho\n");
+            else printf("Jogo perdido\n");
         }
         else{
             t=TempoDecorrido(timer);
@@ -219,17 +219,19 @@ int main( int argc, char* args[] ){
 
         DesenhaSpriteSimples("..//img//fundo.png", 0, 0, 0);//fundo
 
-
-        if(seta!=NULL){
-            DesenhaSprite(seta);//desenha a seta
-            SetAnguloSprite(seta, fase.angulo);//ajusta angulo da seta
-        }
+        //FASE
 
         for(int i=0; i<fase.alvos.size(); i++) DesenhaObjeto(fase.alvos[i]);//desenha alvos
-        DesenhaLinhasSequencia(fase.trajeto.x, fase.trajeto.y, 32, AZUL);//desenha trajeto
+        if(t==0){
+            DesenhaSprite(seta);//desenha a seta
+            SetAnguloSprite(seta, fase.angulo);//ajusta angulo da seta
+            DesenhaLinhasSequencia(fase.trajeto.x, fase.trajeto.y, 32, AZUL);//desenha trajeto
+        };
         DesenhaAnimacao(fase.bola.desenho);//desenha bola
+
+        //HUD
         DesenhaSpriteSimples("..//img//interface.png", 0, 0, 0);//desenha fundo da interface
-        EscreveDoubleCentralizado(fase.angulo, 1, 640, 0, AZUL);//escreve o angulo na interface
+        EscreveDoubleCentralizado(fase.angulo, 1, 640, 25, AZUL);//escreve o angulo na interface
 
         //Indicar que é angulo
         //Indicar que deve usar as setinhas para aumentar e diminuir

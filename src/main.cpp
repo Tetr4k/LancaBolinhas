@@ -1,4 +1,5 @@
 #include "PIG.h"
+#include <stack>
 
 PIG_Evento evento;          //evento ser tratadoi a cada pssada do loop principal
 PIG_Teclado meuTeclado;     //variável como mapeamento do teclado
@@ -11,6 +12,10 @@ PIG_Teclado meuTeclado;     //variável como mapeamento do teclado
 #define D_BORDA 20
 #define D_BAIXO 100
 #define VELOCIDADE 500
+
+int seta;
+vector<int> bolas;
+vector<int> alvos;
 
 struct Bola{
     double x, y, xi, yi, g;
@@ -121,55 +126,42 @@ Trajeto calculaTrajeto(Fase fase){
     return aux;
 }
 
-vector<Fase> preparaFases(vector<int> bolas, vector<int> alvos, int seta){
-    int posX, posY, tipo;
+stack<string> preparaFases(){//le arquivo com o nome dos arquivos de fase
     ifstream arq;
-    //pega o nome dos arquivos de fase
     string auxArquivo;
-    vector<string> vetorArquivos;
+    stack<string> pilhaArquivos;
     arq.open("./fases/arquivosFases.txt", std::ifstream::in);
-    while(arq >> auxArquivo) vetorArquivos.push_back(auxArquivo);
+    while(arq >> auxArquivo)pilhaArquivos.push(auxArquivo);
     arq.close();
-    //pega os arquivos de fase e cria a fase
-    vector<Fase> vetorFases;//std::vector<int>::iterator it = myvector.begin()
-    for(std::vector<string>::iterator i=vetorArquivos.begin(); i!=vetorArquivos.end(); ++i){
-        cout << *i << endl;
-        arq.open(*i, std::ifstream::in);
-        arq >> posY >> tipo;
-        Fase auxFase;
-        auxFase.angulo = C_ANGULO*(tipo+1);
-        auxFase.timer  = CriaTimer(1);
-        auxFase.tempo  = 0;
-        auxFase.bola.desenho = CriaAnimacao(bolas[tipo], 0);
-        auxFase.bola.g  = C_PESO*(tipo+1);
-        auxFase.bola.xi = D_BORDA;
-        auxFase.bola.yi = posY+D_BAIXO+D_BORDA;
-        auxFase.bola.x  = auxFase.bola.xi;
-        auxFase.bola.y  = auxFase.bola.yi;
-        MoveAnimacao(auxFase.bola.desenho, auxFase.bola.x, auxFase.bola.y);
-        auxFase.seta = CriaSprite(seta, 0);
-        GetDimensoesAnimacao(auxFase.bola.desenho, &posX, &posY);
-        MoveSprite(auxFase.seta, auxFase.bola.xi+posY/2-10, auxFase.bola.yi+posX/2);
-        auxFase.trajeto = calculaTrajeto(auxFase);
-        while(arq >> posX >> posY >> tipo){
-            int alvo = CriaObjeto(alvos[tipo], 0);
-            MoveObjeto(alvo, posY, posX);
-            auxFase.alvos.push_back(alvo);
-        }
-        arq.close();
-        vetorFases.push_back(auxFase);
+    return pilhaArquivos;
+}
+
+Fase carregaFase(string arquivo){
+    ifstream arq;
+    int posX, posY, tipo;
+    arq.open(arquivo, std::ifstream::in);
+    arq >> posY >> tipo;
+    Fase auxFase;
+    auxFase.angulo = C_ANGULO*(tipo+1);
+    auxFase.timer  = CriaTimer(1);
+    auxFase.tempo  = 0;
+    auxFase.bola.desenho = CriaAnimacao(bolas[tipo], 0);
+    auxFase.bola.g  = C_PESO*(tipo+1);
+    auxFase.bola.xi = D_BORDA;
+    auxFase.bola.yi = posY+D_BAIXO+D_BORDA;
+    auxFase.bola.x  = auxFase.bola.xi;
+    auxFase.bola.y  = auxFase.bola.yi;
+    MoveAnimacao(auxFase.bola.desenho, auxFase.bola.x, auxFase.bola.y);
+    auxFase.seta = CriaSprite(seta, 0);
+    GetDimensoesAnimacao(auxFase.bola.desenho, &posX, &posY);
+    MoveSprite(auxFase.seta, auxFase.bola.xi+posY/2-10, auxFase.bola.yi+posX/2);
+    auxFase.trajeto = calculaTrajeto(auxFase);
+    while(arq >> posX >> posY >> tipo){
+        int alvo = CriaObjeto(alvos[tipo], 0);
+        MoveObjeto(alvo, posY, posX);
+        auxFase.alvos.push_back(alvo);
     }
-    return vetorFases;
-}
-
-Fase proximaFase(vector<Fase> fases){
-    fases.pop_back();
-    Fase auxFase = fases.back();
-    return auxFase;
-}
-
-Fase reiniciaFase(vector<Fase> fases){
-    Fase auxFase = fases.back();
+    arq.close();
     return auxFase;
 }
 
@@ -191,15 +183,16 @@ int main( int argc, char* args[] ){
     SetVolume(somImpacto, 50);
 
     //cria modelo para bolas, alvos e setas
-    vector<int> alvos = criaModeloAlvos();
-    vector<int> bolas = criaModeloBolas();
-    int seta = CriaSprite(".//img//seta.png", 0);
+    alvos = criaModeloAlvos();
+    bolas = criaModeloBolas();
+    seta = CriaSprite(".//img//seta.png", 0);
     SetDimensoesSprite(seta, 20, 100);
     SetPivoAbsolutoSprite(seta, 10, 0);
 
     //carrega e inicia fases
-    vector<Fase> fases = preparaFases(bolas, alvos, seta);
-    Fase fase = fases.back();
+
+    stack<string> fases = preparaFases();
+    Fase fase = carregaFase(fases.top());
 
     //loop principal do jogo
 
@@ -214,8 +207,11 @@ int main( int argc, char* args[] ){
         //aqui o evento deve ser tratado e as coisas devem ser atualizadas
 
         if(fase.bola.y<D_BAIXO/2) {
-            if(fase.alvos.size()==0) fase = proximaFase(fases);
-            else fase = reiniciaFase(fases);
+            if(fase.alvos.size()==0){
+                fases.pop();
+                fase = carregaFase(fases.top());
+            }
+            else fase = carregaFase(fases.top());
         }
         else{
             fase.tempo = TempoDecorrido(fase.timer);

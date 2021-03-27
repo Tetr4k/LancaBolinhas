@@ -33,9 +33,11 @@ A PIG foi criada usando o Code blocks. Foram feitas algumas configurações de c
 
 A musica de fundo foi baixada no site https://freemusicarchive.org/music/Kevin_MacLeod e adaptada para o jogo
 
-### 3.2 Audio de impacto
+### 3.2 Audios
 
 O audio de colisão foi baixado de https://www.youtube.com/watch?v=j4uCT4t9028 e adaptado para o jogo
+
+O audio de lançamento foi baixado de https://www.youtube.com/watch?v=1cA3t_DcfIg e adaptado para o jogo
 
 ### 3.3 Sprites das bolas
 

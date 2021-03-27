@@ -1,5 +1,3 @@
-./fases/fase4.txt
-./fases/fase3.txt
-./fases/fase2.txt
 ./fases/fase1.txt
+./fases/fase2.txt
 

@@ -194,8 +194,8 @@ Fase carregaFase(string arquivo){//cria um Fase a partir de um arquivo texto
     return auxFase;
 }
 
-int main( int argc, char* args[] ){
 
+int main( int argc, char* args[] ){
     //criando o jogo (aplicação)
     CriaJogo("Lanca Bolinhas");
     SetTituloJanela("Lanca Bolinhas");
@@ -236,37 +236,7 @@ int main( int argc, char* args[] ){
 
         //aqui o evento deve ser tratado e as coisas devem ser atualizadas
 
-        //verifica posição da bola
-        if(fase.bola.y<D_BAIXO/2) {
-            //pausa efeitos sonoros
-            StopAudio(somImpacto);//era pra funcionar?
-            StopAudio(somLancamento);
-        //verifica se a fase esta concluida
-            if(fase.alvos.size()==0){
-                //carrega nova fase
-                fases.pop();
-                fase = carregaFase(fases.top());
-            }
-            else fase = carregaFase(fases.top()); //reinicia fase
-        }
-        else{
-            fase.tempo = TempoDecorrido(fase.timer);//calcula tempo
-            fase.bola.y = calculaY(fase);////calcula y
-            fase.bola.x = calculaX(fase);////calcula x
-            MoveAnimacao(fase.bola.desenho, fase.bola.x, fase.bola.y);//atualiza posição do objeto
-        }
-
-        //verifica colisão da bola com cada alvo
-        for(int i=0; i<fase.alvos.size(); i++) if(TestaColisaoAnimacaoObjeto(fase.bola.desenho, fase.alvos[i])){//teste de colisão
-            //remove alvo
-            fase.alvos.erase(fase.alvos.begin()+i);
-            //gera particulas
-            /*
-                codigo para gerar particulas
-            */
-            PlayAudio(somImpacto);
-        }
-        //captura teclas apertadas
+        //captura teclas pressionadas
         if(evento.tipoEvento == PIG_EVENTO_TECLADO){
             if(evento.teclado.acao == PIG_TECLA_PRESSIONADA && fase.tempo==0){
                 if(evento.teclado.tecla == PIG_TECLA_BARRAESPACO){//atira a bola usando espaço
@@ -287,7 +257,44 @@ int main( int argc, char* args[] ){
             }
         }
 
+        //verifica posição da bola
+        if(fase.bola.y<D_BAIXO/2) {
+            //pausa efeitos sonoros
+            StopAudio(somImpacto);
+            StopAudio(somLancamento);
+            //verifica se a fase esta concluida
+            if(fase.alvos.size()==0){
+                //carrega nova fase
+                fases.pop();
+                fase = carregaFase(fases.top());
+            }
+            else fase = carregaFase(fases.top()); //reinicia fase
+            Espera(1000);
+        }
+        else{
+            fase.tempo = TempoDecorrido(fase.timer);//calcula tempo
+            fase.bola.y = calculaY(fase);////calcula y
+            fase.bola.x = calculaX(fase);////calcula x
+            MoveAnimacao(fase.bola.desenho, fase.bola.x, fase.bola.y);//atualiza posição do objeto
+        }
+
+        for(std::vector<int>::iterator i=fase.alvos.begin(); i!=fase.alvos.end(); ++i) TrataAutomacaoObjeto(*i);
+        TrataAutomacaoAnimacao(fase.bola.desenho);
+        TrataAutomacaoSprite(fase.seta);
+
         //será feita a prepação do frame que será exibido na tela
+
+        //verifica colisão da bola com cada alvo
+        for(int i=0; i<fase.alvos.size(); i++) if(TestaColisaoAnimacaoObjeto(fase.bola.desenho, fase.alvos[i])){//teste de colisão
+            //remove alvo
+            fase.alvos.erase(fase.alvos.begin()+i);
+            //gera particulas
+            /*
+                codigo para gerar particulas
+            */
+            PlayAudio(somImpacto);
+        }
+
         IniciaDesenho();
 
         //todas as chamadas de desenho devem ser feitas aqui na ordem desejada

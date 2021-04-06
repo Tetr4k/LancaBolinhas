@@ -2,16 +2,16 @@
 #include <stack>
 
 PIG_Evento evento;          //evento ser tratadoi a cada pssada do loop principal
-PIG_Teclado meuTeclado;     //variável como mapeamento do teclado
+PIG_Teclado meuTeclado;     //variï¿½vel como mapeamento do teclado
 
-#define T_LARGURA 1280
-#define T_ALTURA 720
-#define C_PESO 180
-#define C_TAM_ALVO 5
-#define C_ANGULO 16
-#define D_BORDA 32
-#define D_BAIXO 100
-#define VELOCIDADE 640
+#define T_LARGURA 1280 //LARGURA DA TELA
+#define T_ALTURA 720   //ALTURA  DA TELA
+#define D_BORDA 32     //Distancia da borda geral
+#define D_BAIXO 100    //Distancia inferior
+#define VELOCIDADE 640 //Velocidade das bolinhas
+#define C_PESO 180     //Um coeficiente para o peso das bolinhas
+#define C_TAM_ALVO 5   //Um coeficiente para o tamanho dos alvos
+#define C_ANGULO 16    //Um coeficiente para o angulo inicial
 
 int seta;
 double tempo;
@@ -21,7 +21,7 @@ vector<int> alvos;
 struct Bola{
     //x atual, y atual, x inicial, y inicial, gravidade sob a bola
     double x, y, xi, yi, g;
-    //animação da bola
+    //animaï¿½ï¿½o da bola
     int desenho;
 };
 
@@ -48,7 +48,7 @@ typedef struct Fase{
 vector<int> criaModeloAlvos(){//funcao para criar modelo dos alvos
     int alvo, tam;
     vector<int> vetorAlvos;
-    //carrega sprite do alvo e cria variações
+    //carrega sprite do alvo e cria variaï¿½ï¿½es
     for(int i=0; i<20; i++){
         tam = i*C_TAM_ALVO+20;
         alvo = CriaObjeto(".//img//alvo.png", 0);
@@ -80,11 +80,11 @@ vector<int> criaModeloBolas(){//funcao para criar modelo das bolas
     DefineTipoColisaoAnimacao(bola1, PIG_COLISAO_CIRCULAR);
     DefineTipoColisaoAnimacao(bola2, PIG_COLISAO_CIRCULAR);
     DefineTipoColisaoAnimacao(bola3, PIG_COLISAO_CIRCULAR);
-    //carrega animação da bola
+    //carrega animaï¿½ï¿½o da bola
     CarregaFramesPorLinhaAnimacao(bola1, 1, 1, 10);
     CarregaFramesPorLinhaAnimacao(bola2, 1, 1, 10);
     CarregaFramesPorLinhaAnimacao(bola3, 1, 1, 10);
-    //define animação da bola parada
+    //define animaï¿½ï¿½o da bola parada
     CriaModoAnimacao(bola1, 0, 1);
     CriaModoAnimacao(bola2, 0, 1);
     CriaModoAnimacao(bola3, 0, 1);
@@ -94,7 +94,7 @@ vector<int> criaModeloBolas(){//funcao para criar modelo das bolas
     MudaModoAnimacao(bola1, 0, 0);
     MudaModoAnimacao(bola2, 0, 0);
     MudaModoAnimacao(bola3, 0, 0);
-    //define animação da bola em movimento
+    //define animaï¿½ï¿½o da bola em movimento
     CriaModoAnimacao(bola1, 1, 1);
     CriaModoAnimacao(bola2, 1, 1);
     CriaModoAnimacao(bola3, 1, 1);
@@ -160,7 +160,7 @@ Fase carregaFase(string arquivo){//cria um Fase a partir de um arquivo texto
     //declara e abre o arquivo
     ifstream arq;
     arq.open(arquivo, std::ifstream::in);
-    //lê posição e tipo da bola
+    //lï¿½ posiï¿½ï¿½o e tipo da bola
     arq >> posY >> tipo;
     //cria a fase
     Fase auxFase;
@@ -168,8 +168,7 @@ Fase carregaFase(string arquivo){//cria um Fase a partir de um arquivo texto
     auxFase.angulo = C_ANGULO*(tipo+1);
     //inicia o timer da fase
     auxFase.timer  = CriaTimer(1);
-    tempo = 0;
-    //cria bola da fase e inicia posição
+    //cria bola da fase e inicia posiï¿½ï¿½o
     auxFase.bola.desenho = CriaAnimacao(bolas[tipo], 0);
     auxFase.bola.g  = C_PESO*(tipo+1);
     auxFase.bola.xi = D_BORDA;
@@ -189,19 +188,19 @@ Fase carregaFase(string arquivo){//cria um Fase a partir de um arquivo texto
         MoveObjeto(alvo, posX, posY+D_BAIXO+D_BORDA);
         auxFase.alvos.push_back(alvo);
     }
-    //fecha arquivo
-    arq.close();
+    arq.close();//fecha arquivo
+    tempo = 0;//reseta o tempo da fase
     return auxFase;
 }
 
 
 int main( int argc, char* args[] ){
-    //criando o jogo (aplicação)
+    //criando o jogo (aplicaï¿½ï¿½o)
     CriaJogo("Lanca Bolinhas");
     SetTituloJanela("Lanca Bolinhas");
     SetTamanhoJanela(T_ALTURA, T_LARGURA);
 
-    //associando o teclado (basta uma única vez) com a variável meuTeclado
+    //associando o teclado (basta uma ï¿½nica vez) com a variï¿½vel meuTeclado
     meuTeclado = GetTeclado();
 
     //cria musica de fundo
@@ -231,7 +230,7 @@ int main( int argc, char* args[] ){
 
     while(JogoRodando()){
 
-        //pega um evento que tenha ocorrido desde a última passada do loop
+        //pega um evento que tenha ocorrido desde a ï¿½ltima passada do loop
         evento = GetEvento();
 
         //aqui o evento deve ser tratado e as coisas devem ser atualizadas
@@ -239,7 +238,7 @@ int main( int argc, char* args[] ){
         //captura teclas pressionadas
         if(evento.tipoEvento == PIG_EVENTO_TECLADO){
             if(evento.teclado.acao == PIG_TECLA_PRESSIONADA && tempo==0){
-                if(evento.teclado.tecla == PIG_TECLA_BARRAESPACO){//atira a bola usando espaço
+                if(evento.teclado.tecla == PIG_TECLA_BARRAESPACO){//atira a bola usando espaï¿½o
                         DespausaTimer(fase.timer);
                         PlayAudio(somLancamento);
                         MudaModoAnimacao(fase.bola.desenho, 1, 0);
@@ -257,7 +256,7 @@ int main( int argc, char* args[] ){
             }
         }
 
-        //verifica posição da bola
+        //verifica posiï¿½ï¿½o da bola
         if(fase.bola.y<D_BAIXO/2) {
             //pausa efeitos sonoros
             StopAudio(somImpacto);
@@ -275,17 +274,17 @@ int main( int argc, char* args[] ){
             tempo = TempoDecorrido(fase.timer);//calcula tempo
             fase.bola.y = calculaY(fase);////calcula y
             fase.bola.x = calculaX(fase);////calcula x
-            MoveAnimacao(fase.bola.desenho, fase.bola.x, fase.bola.y);//atualiza posição do objeto
+            MoveAnimacao(fase.bola.desenho, fase.bola.x, fase.bola.y);//atualiza posiï¿½ï¿½o do objeto
         }
 
         for(std::vector<int>::iterator i=fase.alvos.begin(); i!=fase.alvos.end(); ++i) TrataAutomacaoObjeto(*i);
         TrataAutomacaoAnimacao(fase.bola.desenho);
         TrataAutomacaoSprite(fase.seta);
 
-        //será feita a prepação do frame que será exibido na tela
+        //serï¿½ feita a prepaï¿½ï¿½o do frame que serï¿½ exibido na tela
 
-        //verifica colisão da bola com cada alvo
-        for(int i=0; i<fase.alvos.size(); i++) if(TestaColisaoAnimacaoObjeto(fase.bola.desenho, fase.alvos[i])){//teste de colisão
+        //verifica colisï¿½o da bola com cada alvo
+        for(int i=0; i<fase.alvos.size(); i++) if(TestaColisaoAnimacaoObjeto(fase.bola.desenho, fase.alvos[i])){//teste de colisï¿½o
             //remove alvo
             fase.alvos.erase(fase.alvos.begin()+i);
             //gera particulas
@@ -315,17 +314,17 @@ int main( int argc, char* args[] ){
         EscreveInteiroEsquerda(fase.alvos.size(), 0, 0, VERDE);
         EscreveDoubleDireita(GetFPS(), 1, 1280, 0, VERDE);
 
-        //Indicar que é angulo
+        //Indicar que ï¿½ angulo
         //Indicar que deve usar as setinhas para aumentar e diminuir
-        //Indicar que deve usar espaço para lançar bola
-        //diminuir som de lançamento e botar fade out
+        //Indicar que deve usar espaï¿½o para lanï¿½ar bola
+        //diminuir som de lanï¿½amento e botar fade out
         //Passar de fase
         //Destruir alvo e gerar particulas
 
-        //o frame totalmente pronto será mostrado na tela
+        //o frame totalmente pronto serï¿½ mostrado na tela
         EncerraDesenho();
     }
-    //o jogo será encerrado
+    //o jogo serï¿½ encerrado
     FinalizaJogo();
     return 0;
 }

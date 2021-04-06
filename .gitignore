@@ -19,3 +19,7 @@ libWindows/*
 *.o
 *.rar
 *.dll
+
+*.zip
+
+*.xcf

@@ -14,13 +14,14 @@ PIG_Teclado meuTeclado;     //variável como mapeamento do teclado
 #define VELOCIDADE 640
 
 int seta;
+double tempo;
 vector<int> bolas;
 vector<int> alvos;
 
 struct Bola{
     //x atual, y atual, x inicial, y inicial, gravidade sob a bola
     double x, y, xi, yi, g;
-    //aparencia da bola
+    //animação da bola
     int desenho;
 };
 
@@ -42,7 +43,6 @@ typedef struct Fase{
     Trajeto trajeto;
     //tempo na fase
     int timer;
-    double tempo;
 }Fase;
 
 vector<int> criaModeloAlvos(){//funcao para criar modelo dos alvos
@@ -113,13 +113,13 @@ vector<int> criaModeloBolas(){//funcao para criar modelo das bolas
 int calculaX(Fase fase){
     //calcula x
     double radiano = fase.angulo*M_PI/180.0;
-    return fase.bola.xi + VELOCIDADE*cos(radiano)*fase.tempo;
+    return fase.bola.xi + VELOCIDADE*cos(radiano)*tempo;
 }
 
 int calculaY(Fase fase){
     //calcula y
     double radiano = fase.angulo*M_PI/180.0;
-    return fase.bola.yi + VELOCIDADE*sin(radiano)*fase.tempo-fase.bola.g*pow(fase.tempo, 2)/2;
+    return fase.bola.yi + VELOCIDADE*sin(radiano)*tempo-fase.bola.g*pow(tempo, 2)/2;
 }
 
 Trajeto calculaTrajeto(Fase fase){//calcula trajeto da bola
@@ -168,7 +168,7 @@ Fase carregaFase(string arquivo){//cria um Fase a partir de um arquivo texto
     auxFase.angulo = C_ANGULO*(tipo+1);
     //inicia o timer da fase
     auxFase.timer  = CriaTimer(1);
-    auxFase.tempo  = 0;
+    tempo = 0;
     //cria bola da fase e inicia posição
     auxFase.bola.desenho = CriaAnimacao(bolas[tipo], 0);
     auxFase.bola.g  = C_PESO*(tipo+1);
@@ -179,7 +179,7 @@ Fase carregaFase(string arquivo){//cria um Fase a partir de um arquivo texto
     //cria e posiciona uma seta na fase
     auxFase.seta = CriaSprite(seta, 0);
     GetDimensoesAnimacao(auxFase.bola.desenho, &posY, &posX);
-    MoveSprite(auxFase.seta, auxFase.bola.xi+posX/2, auxFase.bola.yi+posY/2-10);
+    MoveSprite(auxFase.seta, auxFase.bola.xi+posX/2, auxFase.bola.yi+posY/2-40);
     SetAnguloSprite(auxFase.seta, auxFase.angulo);
     //cria o trajeto inicial da bolinha
     auxFase.trajeto = calculaTrajeto(auxFase);
@@ -217,8 +217,8 @@ int main( int argc, char* args[] ){
     alvos = criaModeloAlvos();
     bolas = criaModeloBolas();
     seta = CriaSprite(".//img//seta.png", 0);
-    SetDimensoesSprite(seta, 20, 100);
-    SetPivoAbsolutoSprite(seta, 0, 10);
+    SetDimensoesSprite(seta, 80, 174);
+    SetPivoAbsolutoSprite(seta, 0, 40);
 
     //carrega e inicia fases
     stack<string> fases = preparaFases();
@@ -238,7 +238,7 @@ int main( int argc, char* args[] ){
 
         //captura teclas pressionadas
         if(evento.tipoEvento == PIG_EVENTO_TECLADO){
-            if(evento.teclado.acao == PIG_TECLA_PRESSIONADA && fase.tempo==0){
+            if(evento.teclado.acao == PIG_TECLA_PRESSIONADA && tempo==0){
                 if(evento.teclado.tecla == PIG_TECLA_BARRAESPACO){//atira a bola usando espaço
                         DespausaTimer(fase.timer);
                         PlayAudio(somLancamento);
@@ -272,7 +272,7 @@ int main( int argc, char* args[] ){
             Espera(1000);
         }
         else{
-            fase.tempo = TempoDecorrido(fase.timer);//calcula tempo
+            tempo = TempoDecorrido(fase.timer);//calcula tempo
             fase.bola.y = calculaY(fase);////calcula y
             fase.bola.x = calculaX(fase);////calcula x
             MoveAnimacao(fase.bola.desenho, fase.bola.x, fase.bola.y);//atualiza posição do objeto
@@ -304,9 +304,9 @@ int main( int argc, char* args[] ){
         //desenha Fase
         for(std::vector<int>::iterator i=fase.alvos.begin(); i!=fase.alvos.end(); ++i) DesenhaObjeto(*i);//desenha alvos
         //verifica se a bola esta parada e desenha a seta e o trajeto da bola
-        if(fase.tempo==0){
+        if(tempo==0){
             DesenhaSprite(fase.seta);//desenha a seta
-            DesenhaLinhasSequencia(fase.trajeto.x, fase.trajeto.y, 32, AZUL);//desenha trajeto
+            DesenhaLinhasSequencia(fase.trajeto.x, fase.trajeto.y, 32, VERMELHO);//desenha trajeto
         };
         DesenhaAnimacao(fase.bola.desenho);//desenha bola
         //desenha interface

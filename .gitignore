@@ -23,3 +23,7 @@ libWindows/*
 *.zip
 
 *.xcf
+
+src/main.cpp.save-failed
+
+*.aup3

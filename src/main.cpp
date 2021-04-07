@@ -2,7 +2,7 @@
 #include <stack>
 
 PIG_Evento evento;          //evento ser tratadoi a cada pssada do loop principal
-PIG_Teclado meuTeclado;     //vari�vel como mapeamento do teclado
+PIG_Teclado meuTeclado;     //variável como mapeamento do teclado
 
 #define T_LARGURA 1280 //LARGURA DA TELA
 #define T_ALTURA 720   //ALTURA  DA TELA
@@ -144,7 +144,7 @@ Bola criaBola(int posY, int tipo){//Função para cria uma bola
     auxBola.yi      = posY+D_BAIXO+D_BORDA;             //***
     auxBola.y       = auxBola.yi;                       //***
     auxBola.trajeto = calculaTrajeto(auxBola);          //Calcula o trajeto inicial da bola
-    SetAnguloAnimacao(auxBola.desenho, auxBola.angulo); //Ajusta angulo da animação //<<-----BUG GRAFICO?
+    //SetAnguloAnimacao(auxBola.desenho, auxBola.angulo); //Ajusta angulo da animação //<<-----BUG GRAFICO?
     return auxBola;
 }
 
@@ -173,47 +173,58 @@ Fase carregaFase(string arquivo){//cria um Fase a partir de um arquivo texto
 
 
 int main( int argc, char* args[] ){
-    //criando o jogo (aplica��o)
+    //criando o jogo (aplicação)
+
     CriaJogo("Lanca Bolinhas");
     SetTituloJanela("Lanca Bolinhas");
     SetTamanhoJanela(T_ALTURA, T_LARGURA);
-    //associando o teclado (basta uma �nica vez) com a vari�vel meuTeclado
+
+    //associando o teclado (basta uma única vez) com a variável meuTeclado
+
     meuTeclado = GetTeclado();
-    //cria fontes
+
+    //Cria fontes
     int fonteAngulo     = CriaFonteNormal(".//fontes//FredokaOne-Regular.ttf", 48, AZUL);
     int fonteAlvos      = CriaFonteNormal(".//fontes//FredokaOne-Regular.ttf", 32, VERMELHO);
     int fonteIndicacao  = CriaFonteNormal(".//fontes//FredokaOne-Regular.ttf", 16, AZUL);
-    //cria musica de fundo
-    CarregaBackground(".//sounds//background.mp3");
-    //cria audio de impacto
-    int somImpacto = CriaAudio(".//sounds//soundImpacto.mp3",0);
+
+    CarregaBackground(".//sounds//background.mp3");                     //cria musica de fundo
+    int somImpacto      = CriaAudio(".//sounds//soundImpacto.mp3",0);        //cria audio de impacto
     SetVolume(somImpacto, 50);
-    int somLancamento = CriaAudio(".//sounds//soundLancamento.mp3",0);
+    int somLancamento   = CriaAudio(".//sounds//soundLancamento.mp3",0);  //cria audio de lançamento
     SetVolume(somLancamento, 25);
-    //cria modelos para bolas, alvos e setas
+
+    //Cria modelos para bolas, alvos e setas
     alvos = criaModeloAlvos();
     bolas = criaModeloBolas();
     seta = CriaSprite(".//img//seta.png", 0);
     SetDimensoesSprite(seta, 80, 174);
     SetPivoAbsolutoSprite(seta, 0, 40);
+
     //Sprites de indicações
     int espaco = CriaSprite(".//img//espaco.png", 0);   //Indicação espaço
     SetDimensoesSprite(espaco, 25, 128);
     MoveSprite(espaco, 576, 70);
+
     int cima = CriaSprite(".//img//cima.png", 0);       //Indicação Cima
     SetDimensoesSprite(cima, 25, 25);
     MoveSprite(cima, 576, 40);
+
     int baixo = CriaSprite(".//img//baixo.png", 0);     //Indicação Baixo
     SetDimensoesSprite(baixo, 25, 25);
     MoveSprite(baixo, 576, 10);
-    //carrega e inicia fases
+
+    //Carrega e inicia fases
     stack<string> fases = preparaFases();
     Fase fase = carregaFase(fases.top());
+
     //loop principal do jogo
-    //toca musica de fundo
-    PlayBackground();
+
+    PlayBackground();   //Começa musica de fundo
+
     while(JogoRodando()){
-        //pega um evento que tenha ocorrido desde a �ltima passada do loop
+        //pega um evento que tenha ocorrido desde a última passada do loop
+
         evento = GetEvento();
 
         //aqui o evento deve ser tratado e as coisas devem ser atualizadas
@@ -222,65 +233,62 @@ int main( int argc, char* args[] ){
 
         if(evento.tipoEvento == PIG_EVENTO_TECLADO){
             if(evento.teclado.acao == PIG_TECLA_PRESSIONADA && tempo==0){
-                if(evento.teclado.tecla == PIG_TECLA_BARRAESPACO){//atira a bola usando espaço
+                if(evento.teclado.tecla == PIG_TECLA_BARRAESPACO){  //Atira a bola usando espaço
                     DespausaTimer(fase.timer);
                     PlayAudio(somLancamento);
                     MudaModoAnimacao(fase.bola.desenho, 1, 0);
-                    SetColoracaoSprite(espaco, VERMELHO);   //ajusta coloração da tecla para espaço
+                    SetColoracaoSprite(espaco, VERMELHO);   //Ajusta coloração da tecla para espaço
                 }
-                if(evento.teclado.tecla == PIG_TECLA_CIMA && fase.bola.angulo<89.9){//aumenta angulo usando as seta para cima
+                if(evento.teclado.tecla == PIG_TECLA_CIMA && fase.bola.angulo<89.9){    //Aumenta angulo usando as seta para cima
                     fase.bola.angulo+=0.2;
-                    SetAnguloAnimacao(fase.bola.desenho, fase.bola.angulo); //ajusta angulo da bola
-                    SetAnguloSprite(fase.seta, fase.bola.angulo);           //ajusta angulo da seta
-                    fase.bola.trajeto = calculaTrajeto(fase.bola);          //ajusta trajeto
-                    SetColoracaoSprite(cima, VERMELHO);                     //ajusta coloração da tecla para cima
+                    SetAnguloAnimacao(fase.bola.desenho, fase.bola.angulo); //Ajusta angulo da bola
+                    SetAnguloSprite(fase.seta, fase.bola.angulo);           //Ajusta angulo da seta
+                    fase.bola.trajeto = calculaTrajeto(fase.bola);          //Ajusta trajeto
+                    SetColoracaoSprite(cima, VERMELHO);                     //Ajusta coloração da tecla para cima
                 }
                 if(evento.teclado.tecla == PIG_TECLA_BAIXO && fase.bola.angulo>-89.9){//diminui angulo usando as seta para cima
                     fase.bola.angulo-=0.2;
-                    SetAnguloAnimacao(fase.bola.desenho, fase.bola.angulo); //ajusta angulo da bola
-                    SetAnguloSprite(fase.seta, fase.bola.angulo);           //ajusta angulo da seta
-                    fase.bola.trajeto = calculaTrajeto(fase.bola);          //ajusta trajeto
-                    SetColoracaoSprite(baixo, VERMELHO);                    //ajusta coloração da tecla para baixo
+                    SetAnguloAnimacao(fase.bola.desenho, fase.bola.angulo); //Ajusta angulo da bola
+                    SetAnguloSprite(fase.seta, fase.bola.angulo);           //Ajusta angulo da seta
+                    fase.bola.trajeto = calculaTrajeto(fase.bola);          //Ajusta trajeto
+                    SetColoracaoSprite(baixo, VERMELHO);                    //Ajusta coloração da tecla para baixo
                 }
             }
             else{
-                SetColoracaoSprite(cima, BRANCO);   //retorna a coloração original
-                SetColoracaoSprite(baixo, BRANCO);  //retorna a coloração original
+                SetColoracaoSprite(cima, BRANCO);   //Retorna a coloração original
+                SetColoracaoSprite(baixo, BRANCO);  //Retorna a coloração original
             }
         }
 
-        //verifica posi��o da bola
-        if(fase.bola.y<D_BAIXO/2) {
-            //pausa efeitos sonoros
+        if(fase.bola.y<D_BAIXO/2){  //Verifica posição da bola
+            //Pausa efeitos sonoros
             StopAudio(somImpacto);
             StopAudio(somLancamento);
-            //verifica se a fase esta concluida
-            if(fase.alvos.size()==0){
-                //carrega nova fase
+            //Verifica se a fase esta concluida
+            if(fase.alvos.size()==0){   //Carrega nova fase
                 fases.pop();
                 fase = carregaFase(fases.top());
             }
-            else fase = carregaFase(fases.top()); //reinicia fase
-
-            SetColoracaoSprite(espaco, BRANCO); //retorna a coloração original
+            else fase = carregaFase(fases.top());   //Reinicia fase
+            SetColoracaoSprite(espaco, BRANCO);     //Retorna a coloração original
             Espera(250);
         }
         else{
-            tempo = TempoDecorrido(fase.timer);//calcula tempo
-            fase.bola.y = calculaY(fase.bola);////calcula y
-            fase.bola.x = calculaX(fase.bola);////calcula x
-            MoveAnimacao(fase.bola.desenho, fase.bola.x, fase.bola.y);//atualiza posi��o do objeto
+            tempo = TempoDecorrido(fase.timer); //Calcula tempo
+            fase.bola.y = calculaY(fase.bola);  //Calcula y
+            fase.bola.x = calculaX(fase.bola);  //Calcula x
+            MoveAnimacao(fase.bola.desenho, fase.bola.x, fase.bola.y);  //Atualiza posição do objeto
         }
 
         for(std::vector<int>::iterator i=fase.alvos.begin(); i!=fase.alvos.end(); ++i) TrataAutomacaoObjeto(*i);
         TrataAutomacaoAnimacao(fase.bola.desenho);
         TrataAutomacaoSprite(fase.seta);
 
-        //ser� feita a prepa��o do frame que ser� exibido na tela
+        //será feita a prepação do frame que será exibido na tela
 
-        //verifica colis�o da bola com cada alvo
-        for(int i=0; i<fase.alvos.size(); i++) if(TestaColisaoAnimacaoObjeto(fase.bola.desenho, fase.alvos[i])){//teste de colis�o
-            //remove alvo
+        //Verifica colisão da bola com cada alvo
+        for(int i=0; i<fase.alvos.size(); i++) if(TestaColisaoAnimacaoObjeto(fase.bola.desenho, fase.alvos[i])){//Teste de colisão
+            //Remove alvo
             fase.alvos.erase(fase.alvos.begin()+i);
             //gera particulas
             /*
@@ -293,28 +301,31 @@ int main( int argc, char* args[] ){
 
         //todas as chamadas de desenho devem ser feitas aqui na ordem desejada
 
-        DesenhaSpriteSimples(".//img//fundo.png", 0, 0, 0);//fundo
+        DesenhaSpriteSimples(".//img//fundo.png", 0, 0, 0);//Desenha fundo
 
-        //desenha Fase
-        for(std::vector<int>::iterator i=fase.alvos.begin(); i!=fase.alvos.end(); ++i) DesenhaObjeto(*i);//desenha alvos
-        //verifica se a bola esta parada e desenha a seta e o trajeto da bola
+        //Desenha Fase
+        for(std::vector<int>::iterator i=fase.alvos.begin(); i!=fase.alvos.end(); ++i) DesenhaObjeto(*i);   //Desenha alvos
+        //Verifica se a bola esta parada e desenha a seta e o trajeto da bola
         if(tempo==0){
-            DesenhaSprite(fase.seta);//desenha a seta
-            DesenhaLinhasSequencia(fase.bola.trajeto.x, fase.bola.trajeto.y, 32, VERMELHO);//desenha trajeto
+            DesenhaSprite(fase.seta);       //Desenha a seta
+            DesenhaLinhasSequencia(fase.bola.trajeto.x, fase.bola.trajeto.y, 32, VERMELHO); //Desenha trajeto
         };
-        DesenhaAnimacao(fase.bola.desenho);//desenha bola
-        //desenha interface
-        DesenhaSpriteSimples(".//img//interface.png", 0, 0, 0);//desenha fundo da interface
+        DesenhaAnimacao(fase.bola.desenho); //Desenha bola
 
-        DesenhaSprite(espaco);
+        //Desenha interface
+        DesenhaSpriteSimples(".//img//interface.png", 0, 0, 0); //Desenha fundo da interface
+
+        DesenhaSprite(espaco);                                              //Desenha indicação de atirar
         EscreverCentralizada("Atirar", 640, 75, AZUL, fonteIndicacao);
-        DesenhaSprite(cima);
+
+        DesenhaSprite(cima);                                                //Desenha indicação de aumentar o angulo
         EscreverEsquerda(" Aumentar angulo", 600, 45, AZUL, fonteIndicacao);
-        DesenhaSprite(baixo);
+
+        DesenhaSprite(baixo);                                               //Desenha indicação de diminuir o angulo
         EscreverEsquerda(" Diminuir angulo", 600, 15, AZUL, fonteIndicacao);
 
-        EscreverEsquerda("Angulo: ", 8, 4, AZUL, fonteAngulo);
-        EscreveDoubleDireita(fase.bola.angulo, 1, 304, 4, AZUL, fonteAngulo);//escreve o angulo na interface
+        EscreverEsquerda("Angulo: ", 8, 4, AZUL, fonteAngulo);              //Escreve o angulo na interface
+        EscreveDoubleDireita(fase.bola.angulo, 1, 304, 4, AZUL, fonteAngulo);
         EscreverEsquerda(" graus", 304, 4, AZUL, fonteAngulo);
 
         //Escreve quantidade de alvos
@@ -328,8 +339,6 @@ int main( int argc, char* args[] ){
         }
         else EscreverDireita("Nenhum alvo restante!" , 1272, 4, VERMELHO, fonteAlvos);
 
-        //Indicar que deve usar as setinhas para aumentar e diminuir
-        //Indicar que deve usar espa�o para lan�ar bola
         //Passar de fase
         //Destruir alvo e gerar particulas
 

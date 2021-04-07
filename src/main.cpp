@@ -23,14 +23,14 @@ typedef struct Trajeto{
 }Trajeto;
 
 typedef struct Bola{
-    double x, y, xi, yi, g;//x atual, y atual, x inicial, y inicial, gravidade sob a bola
-    int desenho;//anima��o da bola
+    double x, y, xi, yi, g; //x atual, y atual, x inicial, y inicial, gravidade sob a bola
+    int desenho;            //anima��o da bola
+    Trajeto trajeto;        //trajeto da bola
 }Bola;
 
 typedef struct Fase{
     double angulo;      //angulo da fase
     int seta, timer;    //seta da fase, cronometro da fase;
-    Trajeto trajeto;    //trajeto na fase
     Bola bola;          //bola da fase
     vector<int> alvos;  //alvos da fase
 }Fase;
@@ -154,10 +154,13 @@ Fase carregaFase(string arquivo){//cria um Fase a partir de um arquivo texto
     arq >> posY >> tipo;
     //cria a fase
     Fase auxFase;
-    //inicia o angulo da fase
-    auxFase.angulo = C_ANGULO*(tipo+1);
+
     //inicia o timer da fase
     auxFase.timer  = CriaTimer(1);
+
+    //inicia o angulo da fase
+    auxFase.angulo = C_ANGULO*(tipo+1);
+
     //cria bola da fase e inicia posi��o
     auxFase.bola.desenho = CriaAnimacao(bolas[tipo], 0);
     auxFase.bola.g  = C_PESO*(tipo+1);
@@ -165,19 +168,21 @@ Fase carregaFase(string arquivo){//cria um Fase a partir de um arquivo texto
     auxFase.bola.yi = posY+D_BAIXO+D_BORDA;
     auxFase.bola.x  = auxFase.bola.xi;
     auxFase.bola.y  = auxFase.bola.yi;
+    auxFase.bola.trajeto = calculaTrajeto(auxFase);//cria o trajeto inicial da bolinha
+
     //cria e posiciona uma seta na fase
     auxFase.seta = CriaSprite(seta, 0);
     GetDimensoesAnimacao(auxFase.bola.desenho, &posY, &posX);
     MoveSprite(auxFase.seta, auxFase.bola.xi+posX/2, auxFase.bola.yi+posY/2-40);
     SetAnguloSprite(auxFase.seta, auxFase.angulo);
-    //cria o trajeto inicial da bolinha
-    auxFase.trajeto = calculaTrajeto(auxFase);
+
     //cria todos os alvos de uma fase;
     while(arq >> posY >> posX >> tipo){
         int alvo = CriaObjeto(alvos[tipo], 0);
         MoveObjeto(alvo, posX, posY+D_BAIXO+D_BORDA);
         auxFase.alvos.push_back(alvo);
     }
+
     arq.close();//fecha arquivo
     tempo = 0;//reseta o tempo da fase
     return auxFase;
@@ -237,13 +242,13 @@ int main( int argc, char* args[] ){
                     fase.angulo+=0.2;
                     //SetAnguloAnimacao(fase.bola.desenho, fase.angulo);  //ajusta angulo da bola
                     SetAnguloSprite(fase.seta, fase.angulo);            //ajusta angulo da seta
-                    fase.trajeto = calculaTrajeto(fase);                //ajusta trajeto
+                    fase.bola.trajeto = calculaTrajeto(fase);                //ajusta trajeto
                 }
                 if(evento.teclado.tecla == PIG_TECLA_BAIXO && fase.angulo>-89.9){//diminui angulo usando as seta para cima
                     fase.angulo-=0.2;
                     //SetAnguloAnimacao(fase.bola.desenho, fase.angulo);  //ajusta angulo da bola
                     SetAnguloSprite(fase.seta, fase.angulo);            //ajusta angulo da seta
-                    fase.trajeto = calculaTrajeto(fase);                //ajusta trajeto
+                    fase.bola.trajeto = calculaTrajeto(fase);                //ajusta trajeto
                 }
             }
         }
@@ -297,7 +302,7 @@ int main( int argc, char* args[] ){
         //verifica se a bola esta parada e desenha a seta e o trajeto da bola
         if(tempo==0){
             DesenhaSprite(fase.seta);//desenha a seta
-            DesenhaLinhasSequencia(fase.trajeto.x, fase.trajeto.y, 32, VERMELHO);//desenha trajeto
+            DesenhaLinhasSequencia(fase.bola.trajeto.x, fase.bola.trajeto.y, 32, VERMELHO);//desenha trajeto
         };
         DesenhaAnimacao(fase.bola.desenho);//desenha bola
         //desenha interface

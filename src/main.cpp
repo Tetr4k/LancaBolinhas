@@ -99,90 +99,80 @@ vector<int> criaModeloBolas(){//funcao para criar modelo das bolas
     return vetorBolas;
 }
 
-int calculaX(Bola bola){
-    //calcula x
+int calculaX(Bola bola){//Função para calcular X
     double radiano = bola.angulo*M_PI/180.0;
     return bola.xi + VELOCIDADE*cos(radiano)*tempo;
 }
 
-int calculaY(Bola bola){
-    //calcula y
+int calculaY(Bola bola){//Função para calcular Y
     double radiano = bola.angulo*M_PI/180.0;
     return bola.yi + VELOCIDADE*sin(radiano)*tempo-bola.g*pow(tempo, 2)/2;
 }
 
-Trajeto calculaTrajeto(Bola bola){//calcula trajeto da bola
-    Trajeto aux;
+Trajeto calculaTrajeto(Bola bola){//Função para calcular trajeto da bola
+    Trajeto auxTrajeto;
     int alt, lag;
-    //pega altura e largura da bola
-    GetDimensoesAnimacao(bola.desenho, &alt, &lag);
+    GetDimensoesAnimacao(bola.desenho, &alt, &lag); //Pega altura e largura da bola
     for(int i=0; i<32; i++){
-        double radiano = bola.angulo*M_PI/180.0, t;
-        //calcula x do trajeto
-        aux.x[i] = 40*i+D_BORDA;
-        //calcula tempo a partir de x para calcular y
-        t = (aux.x[i]-bola.xi)/(VELOCIDADE*cos(radiano));
-        //calcula y do trajeto e ajusta a partir da altura da bola
-        aux.y[i] = bola.yi + VELOCIDADE*sin(radiano)*t-bola.g*pow(t, 2)/2+(alt/2);
-        //ajusta x a partir da largura da bola;
-        aux.x[i] +=lag/2;
+        double radiano = bola.angulo*M_PI/180.0, t;                                         //Converte angulo para radiano
+        auxTrajeto.x[i] = 40*i+D_BORDA;                                                     //Calcula x do trajeto
+        t = (auxTrajeto.x[i]-bola.xi)/(VELOCIDADE*cos(radiano));                            //Calcula tempo a partir de x para calcular y
+        auxTrajeto.y[i] = bola.yi + VELOCIDADE*sin(radiano)*t-bola.g*pow(t, 2)/2+(alt/2);   //Calcula y do trajeto e ajusta a partir da altura da bola
+        auxTrajeto.x[i] +=lag/2;                                                            //Ajusta x a partir da largura da bola;
     }
-    return aux;
+    return auxTrajeto;
 }
 
 stack<string> preparaFases(){//le arquivo com o nome dos arquivos de fase
-    //declara e abre o arquivo
     ifstream arq;
     arq.open("./fases/arquivosFases.txt", std::ifstream::in);
     //cria arquivo e pilha de arquivos
     string auxArquivo;
     stack<string> pilhaArquivos;
-    //le arquivos de fases
-    while(arq >> auxArquivo)pilhaArquivos.push(auxArquivo);
-    //fecha arquivo
+    while(arq >> auxArquivo) pilhaArquivos.push(auxArquivo); //le arquivos de fases
     arq.close();
     return pilhaArquivos;
 }
 
+Bola criaBola(int posY, int tipo){//Função para cria uma bola
+    Bola auxBola;
+    auxBola.desenho = CriaAnimacao(bolas[tipo], 0);     //Cria animação da bola
+    auxBola.g       = C_PESO*(tipo+1);                  //Calcula gravidade na bola
+    auxBola.angulo  = C_ANGULO*(tipo+1);                //Calcula angulo inicial da bola
+    auxBola.xi      = D_BORDA;                          //Define posição inicial e atual da bola
+    auxBola.x       = auxBola.xi;                       //***
+    auxBola.yi      = posY+D_BAIXO+D_BORDA;             //***
+    auxBola.y       = auxBola.yi;                       //***
+    auxBola.trajeto = calculaTrajeto(auxBola);          //Calcula o trajeto inicial da bola
+    SetAnguloAnimacao(auxBola.desenho, auxBola.angulo); //Ajusta angulo da animação //<<-----BUG GRAFICO?
+    return auxBola;
+}
+
 Fase carregaFase(string arquivo){//cria um Fase a partir de um arquivo texto
-    int posX, posY, tipo;
-    //declara e abre o arquivo
     ifstream arq;
     arq.open(arquivo, std::ifstream::in);
-    //l� posi��o e tipo da bola
-    arq >> posY >> tipo;
-    //cria a fase
-    Fase auxFase;
+    int posX, posY, tipo;
+    arq >> posY >> tipo;                    //l� posi��o e tipo da bola
+    Fase auxFase;                           //cria a fase
 
-    //inicia o timer da fase
-    auxFase.timer  = CriaTimer(1);
+    tempo = 0;                              //reseta o tempo da fase
+    auxFase.timer   = CriaTimer(1);         //inicia o timer da fase
+    auxFase.bola    = criaBola(posY, tipo); //cria bola da fase
 
-    //cria bola da fase e inicia posi��o
-    auxFase.bola.desenho = CriaAnimacao(bolas[tipo], 0);
-    auxFase.bola.g  = C_PESO*(tipo+1);
-    auxFase.bola.xi = D_BORDA;
-    auxFase.bola.yi = posY+D_BAIXO+D_BORDA;
-    auxFase.bola.x  = auxFase.bola.xi;
-    auxFase.bola.y  = auxFase.bola.yi;
-    auxFase.bola.angulo = C_ANGULO*(tipo+1);
-    SetAnguloAnimacao(auxFase.bola.desenho, auxFase.bola.angulo); //BUG GRAFICO?
-    auxFase.bola.trajeto = calculaTrajeto(auxFase.bola);//cria o trajeto inicial da bolinha
-
-    //cria e posiciona uma seta na fase
-    auxFase.seta = CriaSprite(seta, 0);
+    //cria e posiciona a seta da fase
+    auxFase.seta    = CriaSprite(seta, 0);
     GetDimensoesAnimacao(auxFase.bola.desenho, &posY, &posX);
     MoveSprite(auxFase.seta, auxFase.bola.xi+posX/2, auxFase.bola.yi+posY/2-40);
     SetAnguloSprite(auxFase.seta, auxFase.bola.angulo);
 
-    //cria todos os alvos de uma fase;
+    //cria todos os alvos da fase;
     while(arq >> posY >> posX >> tipo){
         int alvo = CriaObjeto(alvos[tipo], 0);
         MoveObjeto(alvo, posX, posY+D_BAIXO+D_BORDA);
         auxFase.alvos.push_back(alvo);
     }
+    arq.close();
 
-    arq.close();//fecha arquivo
-    tempo = 0;//reseta o tempo da fase
     return auxFase;
 }
 

@@ -18,31 +18,21 @@ double tempo;
 vector<int> bolas;
 vector<int> alvos;
 
-struct Bola{
-    //x atual, y atual, x inicial, y inicial, gravidade sob a bola
-    double x, y, xi, yi, g;
-    //anima��o da bola
-    int desenho;
-};
+typedef struct Trajeto{
+    int x[32], y[32];//coordenadas dos vertices entre as linhas que formam a parabola do trajeto
+}Trajeto;
 
-struct Trajeto{
-    //coordenadas dos vertices entre as linhas que formam a parabola do trajeto
-    int x[32], y[32];
-};
+typedef struct Bola{
+    double x, y, xi, yi, g;//x atual, y atual, x inicial, y inicial, gravidade sob a bola
+    int desenho;//anima��o da bola
+}Bola;
 
 typedef struct Fase{
-    //bola da fase
-    struct Bola bola;
-    //alvos da fase
-    vector<int> alvos;
-    //angulo da fase
-    double angulo;
-    //seta na fase
-    int seta;
-    //trajeto na fase
-    Trajeto trajeto;
-    //tempo na fase
-    int timer;
+    double angulo;      //angulo da fase
+    int seta, timer;    //seta da fase, cronometro da fase;
+    Trajeto trajeto;    //trajeto na fase
+    Bola bola;          //bola da fase
+    vector<int> alvos;  //alvos da fase
 }Fase;
 
 vector<int> criaModeloAlvos(){//funcao para criar modelo dos alvos
@@ -88,9 +78,9 @@ vector<int> criaModeloBolas(){//funcao para criar modelo das bolas
     CriaModoAnimacao(bola1, 0, 1);
     CriaModoAnimacao(bola2, 0, 1);
     CriaModoAnimacao(bola3, 0, 1);
-    InsereFrameAnimacao(bola1, 0, 1, 0.05);
-    InsereFrameAnimacao(bola2, 0, 1, 0.05);
-    InsereFrameAnimacao(bola3, 0, 1, 0.05);
+    InsereFrameAnimacao(bola1, 0, 1, 1);
+    InsereFrameAnimacao(bola2, 0, 1, 1);
+    InsereFrameAnimacao(bola3, 0, 1, 1);
     MudaModoAnimacao(bola1, 0, 0);
     MudaModoAnimacao(bola2, 0, 0);
     MudaModoAnimacao(bola3, 0, 0);
@@ -99,9 +89,9 @@ vector<int> criaModeloBolas(){//funcao para criar modelo das bolas
     CriaModoAnimacao(bola2, 1, 1);
     CriaModoAnimacao(bola3, 1, 1);
     for(int i=0; i<10; i++){
-        InsereFrameAnimacao(bola1, 1, i+1, 0.05);
-        InsereFrameAnimacao(bola2, 1, i+1, 0.05);
-        InsereFrameAnimacao(bola3, 1, i+1, 0.05);
+        InsereFrameAnimacao(bola1, 1, i+1, 0.04);
+        InsereFrameAnimacao(bola2, 1, i+1, 0.06);
+        InsereFrameAnimacao(bola3, 1, i+1, 0.08);
     }
     //insere bolas no vetor
     vetorBolas.push_back(bola1);
@@ -245,13 +235,15 @@ int main( int argc, char* args[] ){
                 }
                 if(evento.teclado.tecla == PIG_TECLA_CIMA && fase.angulo<89.9){//aumenta angulo usando as seta para cima
                     fase.angulo+=0.2;
-                    SetAnguloSprite(fase.seta, fase.angulo);//ajusta angulo da seta
-                    fase.trajeto = calculaTrajeto(fase);//ajusta trajeto
+                    //SetAnguloAnimacao(fase.bola.desenho, fase.angulo);  //ajusta angulo da bola
+                    SetAnguloSprite(fase.seta, fase.angulo);            //ajusta angulo da seta
+                    fase.trajeto = calculaTrajeto(fase);                //ajusta trajeto
                 }
                 if(evento.teclado.tecla == PIG_TECLA_BAIXO && fase.angulo>-89.9){//diminui angulo usando as seta para cima
                     fase.angulo-=0.2;
-                    SetAnguloSprite(fase.seta, fase.angulo);//ajusta angulo da seta
-                    fase.trajeto = calculaTrajeto(fase);//ajusta trajeto
+                    //SetAnguloAnimacao(fase.bola.desenho, fase.angulo);  //ajusta angulo da bola
+                    SetAnguloSprite(fase.seta, fase.angulo);            //ajusta angulo da seta
+                    fase.trajeto = calculaTrajeto(fase);                //ajusta trajeto
                 }
             }
         }

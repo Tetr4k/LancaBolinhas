@@ -24,8 +24,8 @@ typedef struct Trajeto{
 
 typedef struct Bola{
     double x, y, xi, yi, g, angulo; //x atual, y atual, x inicial, y inicial, gravidade sob a bola e angulo da bola
-    int desenho;            //anima��o da bola
-    Trajeto trajeto;        //trajeto da bola
+    int desenho;                    //anima��o da bola
+    Trajeto trajeto;                //trajeto da bola
 }Bola;
 
 typedef struct Fase{
@@ -99,13 +99,13 @@ vector<int> criaModeloBolas(){//funcao para criar modelo das bolas
     return vetorBolas;
 }
 
-int calculaX(Bola bola){//Função para calcular X
-    double radiano = bola.angulo*M_PI/180.0;
+int calculaX(Bola bola){    //Função para calcular X
+    double radiano = bola.angulo*M_PI/180.0;    //Converte angulo para radiano
     return bola.xi + VELOCIDADE*cos(radiano)*tempo;
 }
 
-int calculaY(Bola bola){//Função para calcular Y
-    double radiano = bola.angulo*M_PI/180.0;
+int calculaY(Bola bola){    //Função para calcular Y
+    double radiano = bola.angulo*M_PI/180.0;    //Converte angulo para radiano
     return bola.yi + VELOCIDADE*sin(radiano)*tempo-bola.g*pow(tempo, 2)/2;
 }
 
@@ -154,25 +154,20 @@ Fase carregaFase(string arquivo){//cria um Fase a partir de um arquivo texto
     int posX, posY, tipo;
     arq >> posY >> tipo;                    //l� posi��o e tipo da bola
     Fase auxFase;                           //cria a fase
-
     tempo = 0;                              //reseta o tempo da fase
     auxFase.timer   = CriaTimer(1);         //inicia o timer da fase
     auxFase.bola    = criaBola(posY, tipo); //cria bola da fase
-
-    //cria e posiciona a seta da fase
-    auxFase.seta    = CriaSprite(seta, 0);
+    auxFase.seta    = CriaSprite(seta, 0);  //cria seta da fase
     GetDimensoesAnimacao(auxFase.bola.desenho, &posY, &posX);
-    MoveSprite(auxFase.seta, auxFase.bola.xi+posX/2, auxFase.bola.yi+posY/2-40);
-    SetAnguloSprite(auxFase.seta, auxFase.bola.angulo);
-
-    //cria todos os alvos da fase;
+    MoveSprite(auxFase.seta, auxFase.bola.xi+posX/2, auxFase.bola.yi+posY/2-40);    //Posiciona seta
+    SetAnguloSprite(auxFase.seta, auxFase.bola.angulo);                             //Ajusta angulo da seta
+    //Cria os alvos da fase;
     while(arq >> posY >> posX >> tipo){
         int alvo = CriaObjeto(alvos[tipo], 0);
         MoveObjeto(alvo, posX, posY+D_BAIXO+D_BORDA);
         auxFase.alvos.push_back(alvo);
     }
     arq.close();
-
     return auxFase;
 }
 
@@ -182,62 +177,75 @@ int main( int argc, char* args[] ){
     CriaJogo("Lanca Bolinhas");
     SetTituloJanela("Lanca Bolinhas");
     SetTamanhoJanela(T_ALTURA, T_LARGURA);
-
     //associando o teclado (basta uma �nica vez) com a vari�vel meuTeclado
     meuTeclado = GetTeclado();
-
+    //cria fontes
+    int fonteAngulo     = CriaFonteNormal(".//fontes//FredokaOne-Regular.ttf", 48, AZUL);
+    int fonteAlvos      = CriaFonteNormal(".//fontes//FredokaOne-Regular.ttf", 32, VERMELHO);
+    int fonteIndicacao  = CriaFonteNormal(".//fontes//FredokaOne-Regular.ttf", 16, AZUL);
     //cria musica de fundo
     CarregaBackground(".//sounds//background.mp3");
-
     //cria audio de impacto
     int somImpacto = CriaAudio(".//sounds//soundImpacto.mp3",0);
     SetVolume(somImpacto, 50);
     int somLancamento = CriaAudio(".//sounds//soundLancamento.mp3",0);
     SetVolume(somLancamento, 25);
-
     //cria modelos para bolas, alvos e setas
     alvos = criaModeloAlvos();
     bolas = criaModeloBolas();
     seta = CriaSprite(".//img//seta.png", 0);
     SetDimensoesSprite(seta, 80, 174);
     SetPivoAbsolutoSprite(seta, 0, 40);
-
+    //Sprites de indicações
+    int espaco = CriaSprite(".//img//espaco.png", 0);   //Indicação espaço
+    SetDimensoesSprite(espaco, 25, 128);
+    MoveSprite(espaco, 576, 70);
+    int cima = CriaSprite(".//img//cima.png", 0);       //Indicação Cima
+    SetDimensoesSprite(cima, 25, 25);
+    MoveSprite(cima, 576, 40);
+    int baixo = CriaSprite(".//img//baixo.png", 0);     //Indicação Baixo
+    SetDimensoesSprite(baixo, 25, 25);
+    MoveSprite(baixo, 576, 10);
     //carrega e inicia fases
     stack<string> fases = preparaFases();
     Fase fase = carregaFase(fases.top());
-
     //loop principal do jogo
-
     //toca musica de fundo
     PlayBackground();
-
     while(JogoRodando()){
-
         //pega um evento que tenha ocorrido desde a �ltima passada do loop
         evento = GetEvento();
 
         //aqui o evento deve ser tratado e as coisas devem ser atualizadas
 
         //captura teclas pressionadas
+
         if(evento.tipoEvento == PIG_EVENTO_TECLADO){
             if(evento.teclado.acao == PIG_TECLA_PRESSIONADA && tempo==0){
-                if(evento.teclado.tecla == PIG_TECLA_BARRAESPACO){//atira a bola usando espa�o
-                        DespausaTimer(fase.timer);
-                        PlayAudio(somLancamento);
-                        MudaModoAnimacao(fase.bola.desenho, 1, 0);
+                if(evento.teclado.tecla == PIG_TECLA_BARRAESPACO){//atira a bola usando espaço
+                    DespausaTimer(fase.timer);
+                    PlayAudio(somLancamento);
+                    MudaModoAnimacao(fase.bola.desenho, 1, 0);
+                    SetColoracaoSprite(espaco, VERMELHO);   //ajusta coloração da tecla para espaço
                 }
                 if(evento.teclado.tecla == PIG_TECLA_CIMA && fase.bola.angulo<89.9){//aumenta angulo usando as seta para cima
                     fase.bola.angulo+=0.2;
-                    SetAnguloAnimacao(fase.bola.desenho, fase.bola.angulo);  //ajusta angulo da bola
-                    SetAnguloSprite(fase.seta, fase.bola.angulo);            //ajusta angulo da seta
-                    fase.bola.trajeto = calculaTrajeto(fase.bola);                //ajusta trajeto
+                    SetAnguloAnimacao(fase.bola.desenho, fase.bola.angulo); //ajusta angulo da bola
+                    SetAnguloSprite(fase.seta, fase.bola.angulo);           //ajusta angulo da seta
+                    fase.bola.trajeto = calculaTrajeto(fase.bola);          //ajusta trajeto
+                    SetColoracaoSprite(cima, VERMELHO);                     //ajusta coloração da tecla para cima
                 }
                 if(evento.teclado.tecla == PIG_TECLA_BAIXO && fase.bola.angulo>-89.9){//diminui angulo usando as seta para cima
                     fase.bola.angulo-=0.2;
-                    SetAnguloAnimacao(fase.bola.desenho, fase.bola.angulo);  //ajusta angulo da bola
-                    SetAnguloSprite(fase.seta, fase.bola.angulo);            //ajusta angulo da seta
-                    fase.bola.trajeto = calculaTrajeto(fase.bola);                //ajusta trajeto
+                    SetAnguloAnimacao(fase.bola.desenho, fase.bola.angulo); //ajusta angulo da bola
+                    SetAnguloSprite(fase.seta, fase.bola.angulo);           //ajusta angulo da seta
+                    fase.bola.trajeto = calculaTrajeto(fase.bola);          //ajusta trajeto
+                    SetColoracaoSprite(baixo, VERMELHO);                    //ajusta coloração da tecla para baixo
                 }
+            }
+            else{
+                SetColoracaoSprite(cima, BRANCO);   //retorna a coloração original
+                SetColoracaoSprite(baixo, BRANCO);  //retorna a coloração original
             }
         }
 
@@ -253,7 +261,9 @@ int main( int argc, char* args[] ){
                 fase = carregaFase(fases.top());
             }
             else fase = carregaFase(fases.top()); //reinicia fase
-            Espera(1000);
+
+            SetColoracaoSprite(espaco, BRANCO); //retorna a coloração original
+            Espera(250);
         }
         else{
             tempo = TempoDecorrido(fase.timer);//calcula tempo
@@ -295,14 +305,31 @@ int main( int argc, char* args[] ){
         DesenhaAnimacao(fase.bola.desenho);//desenha bola
         //desenha interface
         DesenhaSpriteSimples(".//img//interface.png", 0, 0, 0);//desenha fundo da interface
-        EscreveDoubleCentralizado(fase.bola.angulo, 1, 640, 25, AZUL);//escreve o angulo na interface
-        EscreveInteiroEsquerda(fase.alvos.size(), 0, 0, VERDE);
-        EscreveDoubleDireita(GetFPS(), 1, 1280, 0, VERDE);
 
-        //Indicar que � angulo
+        DesenhaSprite(espaco);
+        EscreverCentralizada("Atirar", 640, 75, AZUL, fonteIndicacao);
+        DesenhaSprite(cima);
+        EscreverEsquerda(" Aumentar angulo", 600, 45, AZUL, fonteIndicacao);
+        DesenhaSprite(baixo);
+        EscreverEsquerda(" Diminuir angulo", 600, 15, AZUL, fonteIndicacao);
+
+        EscreverEsquerda("Angulo: ", 8, 4, AZUL, fonteAngulo);
+        EscreveDoubleDireita(fase.bola.angulo, 1, 304, 4, AZUL, fonteAngulo);//escreve o angulo na interface
+        EscreverEsquerda(" graus", 304, 4, AZUL, fonteAngulo);
+
+        //Escreve quantidade de alvos
+        if(fase.alvos.size()>1){
+            EscreveInteiroDireita(fase.alvos.size(), 1014, 4, VERMELHO, fonteAlvos);
+            EscreverDireita(" alvos restantes!" , 1272, 4, VERMELHO, fonteAlvos);
+        }
+        else if(fase.alvos.size()==1){
+            EscreveInteiroDireita(fase.alvos.size(), 1048, 4, VERMELHO, fonteAlvos);
+            EscreverDireita(" alvo restante!" , 1272, 4, VERMELHO, fonteAlvos);
+        }
+        else EscreverDireita("Nenhum alvo restante!" , 1272, 4, VERMELHO, fonteAlvos);
+
         //Indicar que deve usar as setinhas para aumentar e diminuir
         //Indicar que deve usar espa�o para lan�ar bola
-        //diminuir som de lan�amento e botar fade out
         //Passar de fase
         //Destruir alvo e gerar particulas
 

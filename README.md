@@ -27,7 +27,7 @@ Cada fase é definida por quantidade de alvos e bolinhas, força máxima e míni
 
 A PIG foi criada usando o Code blocks. Foram feitas algumas configurações de compilação através dessa IDE e até então é recomendado utilizar o mesmo. O arquivo do projeto pode ser encontrado em "./src".
 
-## 3 - Terceiros(rs)
+## 3 - Terceiros
 
 ### 3.1 Musica de fundo
 
@@ -41,4 +41,8 @@ O audio de lançamento foi baixado de https://www.youtube.com/watch?v=1cA3t_DcfI
 
 ### 3.3 Sprites das bolas
 
-Esses sprites foram baixados em https://www.spriters-resource.com/pc_computer/insaniquarium/sheet/19830/ e adaptados para o jogo
+Os sprites foram baixados em https://www.spriters-resource.com/pc_computer/insaniquarium/sheet/19830/ e adaptados para o jogo
+
+### 3.4 Fonte
+
+A fonte foi baixada de https://fonts.google.com/specimen/Fredoka+One#standard-styles

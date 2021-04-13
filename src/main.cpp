@@ -1,17 +1,19 @@
 #include "PIG.h"
-#include <stack>
+#include <queue>
 
 PIG_Evento evento;          //evento ser tratadoi a cada pssada do loop principal
 PIG_Teclado meuTeclado;     //variável como mapeamento do teclado
 
-#define T_LARGURA 1280 //LARGURA DA TELA
-#define T_ALTURA 720   //ALTURA  DA TELA
-#define D_BORDA 32     //Distancia da borda geral
-#define D_BAIXO 100    //Distancia inferior
-#define VELOCIDADE 640 //Velocidade das bolinhas
-#define C_PESO 180     //Um coeficiente para o peso das bolinhas
-#define C_TAM_ALVO 5   //Um coeficiente para o tamanho dos alvos
-#define C_ANGULO 16    //Um coeficiente para o angulo inicial
+#define T_LARGURA 1280      //LARGURA DA TELA
+#define T_ALTURA 720        //ALTURA  DA TELA
+#define D_BORDA 32          //Distancia da borda geral
+#define D_BAIXO 100         //Distancia inferior
+#define VELOCIDADE 640      //Velocidade das bolinhas
+#define C_PESO 180          //Um coeficiente para o peso das bolinhas
+#define C_TAM_ALVO 5        //Um coeficiente para o tamanho dos alvos
+#define C_ANGULO 16         //Um coeficiente para o angulo inicial
+#define COR_CUSTOMIZADA ((PIG_Cor){155,232,12,255}) //COR CUSTOMIZADA verde claro amarelo
+#define COR_CUSTOMIZADA2 ((PIG_Cor){86,232,13,255}) //COR CUSTOMIZADA2 verde claro verde
 
 int seta;
 double tempo;
@@ -99,12 +101,12 @@ vector<int> criaModeloBolas(){//funcao para criar modelo das bolas
     return vetorBolas;
 }
 
-int calculaX(Bola bola){    //Função para calcular X
+int calculaX(Bola bola){//Função para calcular X
     double radiano = bola.angulo*M_PI/180.0;    //Converte angulo para radiano
     return bola.xi + VELOCIDADE*cos(radiano)*tempo;
 }
 
-int calculaY(Bola bola){    //Função para calcular Y
+int calculaY(Bola bola){//Função para calcular Y
     double radiano = bola.angulo*M_PI/180.0;    //Converte angulo para radiano
     return bola.yi + VELOCIDADE*sin(radiano)*tempo-bola.g*pow(tempo, 2)/2;
 }
@@ -123,15 +125,15 @@ Trajeto calculaTrajeto(Bola bola){//Função para calcular trajeto da bola
     return auxTrajeto;
 }
 
-stack<string> preparaFases(){//le arquivo com o nome dos arquivos de fase
+queue<string> preparaFases(){//le arquivo com o nome dos arquivos de fase
     ifstream arq;
     arq.open("./fases/arquivosFases.txt", std::ifstream::in);
     //cria arquivo e pilha de arquivos
     string auxArquivo;
-    stack<string> pilhaArquivos;
-    while(arq >> auxArquivo) pilhaArquivos.push(auxArquivo); //le arquivos de fases
+    queue<string> filaArquivos;
+    while(arq >> auxArquivo) filaArquivos.push(auxArquivo); //le arquivos de fases
     arq.close();
-    return pilhaArquivos;
+    return filaArquivos;
 }
 
 Bola criaBola(int posY, int tipo){//Função para cria uma bola
@@ -144,7 +146,7 @@ Bola criaBola(int posY, int tipo){//Função para cria uma bola
     auxBola.yi      = posY+D_BAIXO+D_BORDA;             //***
     auxBola.y       = auxBola.yi;                       //***
     auxBola.trajeto = calculaTrajeto(auxBola);          //Calcula o trajeto inicial da bola
-    //SetAnguloAnimacao(auxBola.desenho, auxBola.angulo); //Ajusta angulo da animação //<<-----BUG GRAFICO?
+    SetAnguloAnimacao(auxBola.desenho, auxBola.angulo); //Ajusta angulo da animação //<<-----BUG GRAFICO?
     return auxBola;
 }
 
@@ -176,7 +178,6 @@ int main( int argc, char* args[] ){
     //criando o jogo (aplicação)
 
     CriaJogo("Lanca Bolinhas");
-    SetTituloJanela("Lanca Bolinhas");
     SetTamanhoJanela(T_ALTURA, T_LARGURA);
 
     //associando o teclado (basta uma única vez) com a variável meuTeclado
@@ -184,21 +185,21 @@ int main( int argc, char* args[] ){
     meuTeclado = GetTeclado();
 
     //Cria fontes
-    int fonteAngulo     = CriaFonteNormal(".//fontes//FredokaOne-Regular.ttf", 48, AZUL);
-    int fonteAlvos      = CriaFonteNormal(".//fontes//FredokaOne-Regular.ttf", 32, VERMELHO);
-    int fonteIndicacao  = CriaFonteNormal(".//fontes//FredokaOne-Regular.ttf", 16, AZUL);
+    int fonteAngulo     = CriaFonteNormal(".//fontes//FredokaOne-Regular.ttf", 48, COR_CUSTOMIZADA);
+    int fonteAlvos      = CriaFonteNormal(".//fontes//FredokaOne-Regular.ttf", 32, AMARELO);
+    int fonteIndicacao  = CriaFonteNormal(".//fontes//FredokaOne-Regular.ttf", 16, COR_CUSTOMIZADA2);
 
-    CarregaBackground(".//sounds//background.mp3");                     //cria musica de fundo
-    int somImpacto      = CriaAudio(".//sounds//soundImpacto.mp3",0);        //cria audio de impacto
+    CarregaBackground(".//sounds//background.mp3");                         //cria musica de fundo
+    int somImpacto      = CriaAudio(".//sounds//soundImpacto.mp3",0);       //cria audio de impacto
     SetVolume(somImpacto, 50);
-    int somLancamento   = CriaAudio(".//sounds//soundLancamento.mp3",0);  //cria audio de lançamento
+    int somLancamento   = CriaAudio(".//sounds//soundLancamento.mp3",0);    //cria audio de lançamento
     SetVolume(somLancamento, 25);
 
     //Cria modelos para bolas, alvos e setas
     alvos = criaModeloAlvos();
     bolas = criaModeloBolas();
     seta = CriaSprite(".//img//seta.png", 0);
-    SetDimensoesSprite(seta, 80, 174);
+    SetDimensoesSprite(seta, 80, 200);
     SetPivoAbsolutoSprite(seta, 0, 40);
 
     //Sprites de indicações
@@ -215,8 +216,8 @@ int main( int argc, char* args[] ){
     MoveSprite(baixo, 576, 10);
 
     //Carrega e inicia fases
-    stack<string> fases = preparaFases();
-    Fase fase = carregaFase(fases.top());
+    queue<string> fases = preparaFases();
+    Fase fase = carregaFase(fases.front());
 
     //loop principal do jogo
 
@@ -233,20 +234,20 @@ int main( int argc, char* args[] ){
 
         if(evento.tipoEvento == PIG_EVENTO_TECLADO){
             if(evento.teclado.acao == PIG_TECLA_PRESSIONADA && tempo==0){
-                if(evento.teclado.tecla == PIG_TECLA_BARRAESPACO){  //Atira a bola usando espaço
+                if(evento.teclado.tecla == PIG_TECLA_BARRAESPACO){//Atira a bola usando espaço
                     DespausaTimer(fase.timer);
                     PlayAudio(somLancamento);
                     MudaModoAnimacao(fase.bola.desenho, 1, 0);
                     SetColoracaoSprite(espaco, VERMELHO);   //Ajusta coloração da tecla para espaço
                 }
-                if(evento.teclado.tecla == PIG_TECLA_CIMA && fase.bola.angulo<89.9){    //Aumenta angulo usando as seta para cima
+                if(evento.teclado.tecla == PIG_TECLA_CIMA && fase.bola.angulo<85){//Aumenta angulo usando as seta para cima
                     fase.bola.angulo+=0.2;
                     SetAnguloAnimacao(fase.bola.desenho, fase.bola.angulo); //Ajusta angulo da bola
                     SetAnguloSprite(fase.seta, fase.bola.angulo);           //Ajusta angulo da seta
                     fase.bola.trajeto = calculaTrajeto(fase.bola);          //Ajusta trajeto
                     SetColoracaoSprite(cima, VERMELHO);                     //Ajusta coloração da tecla para cima
                 }
-                if(evento.teclado.tecla == PIG_TECLA_BAIXO && fase.bola.angulo>-89.9){//diminui angulo usando as seta para cima
+                if(evento.teclado.tecla == PIG_TECLA_BAIXO && fase.bola.angulo>-85){//diminui angulo usando as seta para cima
                     fase.bola.angulo-=0.2;
                     SetAnguloAnimacao(fase.bola.desenho, fase.bola.angulo); //Ajusta angulo da bola
                     SetAnguloSprite(fase.seta, fase.bola.angulo);           //Ajusta angulo da seta
@@ -256,7 +257,7 @@ int main( int argc, char* args[] ){
             }
             else{
                 SetColoracaoSprite(cima, BRANCO);   //Retorna a coloração original
-                SetColoracaoSprite(baixo, BRANCO);  //Retorna a coloração original
+                SetColoracaoSprite(baixo, BRANCO);  //*
             }
         }
 
@@ -267,9 +268,10 @@ int main( int argc, char* args[] ){
             //Verifica se a fase esta concluida
             if(fase.alvos.size()==0){   //Carrega nova fase
                 fases.pop();
-                fase = carregaFase(fases.top());
+                if(fases.empty()) printf("Fim de jogo");
+                else fase = carregaFase(fases.front());
             }
-            else fase = carregaFase(fases.top());   //Reinicia fase
+            else fase = carregaFase(fases.front());   //Reinicia fase
             SetColoracaoSprite(espaco, BRANCO);     //Retorna a coloração original
             Espera(250);
         }
@@ -284,8 +286,6 @@ int main( int argc, char* args[] ){
         TrataAutomacaoAnimacao(fase.bola.desenho);
         TrataAutomacaoSprite(fase.seta);
 
-        //será feita a prepação do frame que será exibido na tela
-
         //Verifica colisão da bola com cada alvo
         for(int i=0; i<fase.alvos.size(); i++) if(TestaColisaoAnimacaoObjeto(fase.bola.desenho, fase.alvos[i])){//Teste de colisão
             //Remove alvo
@@ -296,6 +296,8 @@ int main( int argc, char* args[] ){
             */
             PlayAudio(somImpacto);
         }
+
+        //será feita a prepação do frame que será exibido na tela
 
         IniciaDesenho();
 
@@ -308,7 +310,7 @@ int main( int argc, char* args[] ){
         //Verifica se a bola esta parada e desenha a seta e o trajeto da bola
         if(tempo==0){
             DesenhaSprite(fase.seta);       //Desenha a seta
-            DesenhaLinhasSequencia(fase.bola.trajeto.x, fase.bola.trajeto.y, 32, VERMELHO); //Desenha trajeto
+            DesenhaLinhasSequencia(fase.bola.trajeto.x, fase.bola.trajeto.y, 32, AMARELO); //Desenha trajeto
         };
         DesenhaAnimacao(fase.bola.desenho); //Desenha bola
 
@@ -316,28 +318,28 @@ int main( int argc, char* args[] ){
         DesenhaSpriteSimples(".//img//interface.png", 0, 0, 0); //Desenha fundo da interface
 
         DesenhaSprite(espaco);                                              //Desenha indicação de atirar
-        EscreverCentralizada("Atirar", 640, 75, AZUL, fonteIndicacao);
+        EscreverCentralizada("Atirar", 640, 75, COR_CUSTOMIZADA2, fonteIndicacao);
 
         DesenhaSprite(cima);                                                //Desenha indicação de aumentar o angulo
-        EscreverEsquerda(" Aumentar angulo", 600, 45, AZUL, fonteIndicacao);
+        EscreverEsquerda(" Aumentar angulo", 600, 45, COR_CUSTOMIZADA2, fonteIndicacao);
 
         DesenhaSprite(baixo);                                               //Desenha indicação de diminuir o angulo
-        EscreverEsquerda(" Diminuir angulo", 600, 15, AZUL, fonteIndicacao);
+        EscreverEsquerda(" Diminuir angulo", 600, 15, COR_CUSTOMIZADA2, fonteIndicacao);
 
-        EscreverEsquerda("Angulo: ", 8, 4, AZUL, fonteAngulo);              //Escreve o angulo na interface
-        EscreveDoubleDireita(fase.bola.angulo, 1, 304, 4, AZUL, fonteAngulo);
-        EscreverEsquerda(" graus", 304, 4, AZUL, fonteAngulo);
+        EscreverEsquerda("Angulo: ", 8, 4, COR_CUSTOMIZADA, fonteAngulo);              //Escreve o angulo na interface
+        EscreveDoubleDireita(fase.bola.angulo, 1, 304, 4, COR_CUSTOMIZADA, fonteAngulo);
+        EscreverEsquerda(" graus", 304, 4, COR_CUSTOMIZADA, fonteAngulo);
 
         //Escreve quantidade de alvos
         if(fase.alvos.size()>1){
-            EscreveInteiroDireita(fase.alvos.size(), 1014, 4, VERMELHO, fonteAlvos);
-            EscreverDireita(" alvos restantes!" , 1272, 4, VERMELHO, fonteAlvos);
+            EscreveInteiroDireita(fase.alvos.size(), 1014, 4, AMARELO, fonteAlvos);
+            EscreverDireita(" alvos restantes!" , 1272, 4, AMARELO, fonteAlvos);
         }
         else if(fase.alvos.size()==1){
-            EscreveInteiroDireita(fase.alvos.size(), 1048, 4, VERMELHO, fonteAlvos);
-            EscreverDireita(" alvo restante!" , 1272, 4, VERMELHO, fonteAlvos);
+            EscreveInteiroDireita(fase.alvos.size(), 1048, 4, AMARELO, fonteAlvos);
+            EscreverDireita(" alvo restante!" , 1272, 4, AMARELO, fonteAlvos);
         }
-        else EscreverDireita("Nenhum alvo restante!" , 1272, 4, VERMELHO, fonteAlvos);
+        else EscreverDireita("Nenhum alvo restante!" , 1272, 4, AMARELO, fonteAlvos);
 
         //Passar de fase
         //Destruir alvo e gerar particulas
@@ -345,7 +347,7 @@ int main( int argc, char* args[] ){
         //o frame totalmente pronto ser� mostrado na tela
         EncerraDesenho();
     }
-    //o jogo ser� encerrado
+    //o jogo será encerrado
     FinalizaJogo();
     return 0;
 }

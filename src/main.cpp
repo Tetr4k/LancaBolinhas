@@ -152,12 +152,15 @@ Bola criaBola(int posY, int forma){//Função para cria uma bola
     auxBola.y       = auxBola.yi;                        //***
     auxBola.trajeto = calculaTrajeto(auxBola);           //Calcula o trajeto inicial da bola
     SetAnguloAnimacao(auxBola.desenho, auxBola.angulo);  //Ajusta angulo da animação
-    cout << "teste1" << endl;
     return auxBola;
 }
 
-Elemento carregaElemento(string arquivo, Elemento *auxElemento){    //cria um Fase a partir de um arquivo texto
-    if(auxElemento->item!=NULL) free(auxElemento->item);
+Elemento *carregaElemento(string arquivo, Elemento *auxElemento){    //cria um Fase a partir de um arquivo texto
+    if(auxElemento!=NULL){
+        if(auxElemento->item!=NULL) free(auxElemento->item);
+        free(auxElemento);
+    }
+    auxElemento = (Elemento*) malloc(sizeof(Elemento));
     ifstream arq;
     arq.open(arquivo, std::ifstream::in);
     int forma, posX, posY;
@@ -169,7 +172,6 @@ Elemento carregaElemento(string arquivo, Elemento *auxElemento){    //cria um Fa
         case 0:
             auxFase = (Fase*) malloc(sizeof(Fase));
             arq >> posY >> forma;                       //l� posi��o e tipo da bola
-            cout << forma;
             tempo = 0;                                  //reseta o tempo da fase
             auxFase->timer   = CriaTimer(1);            //inicia o timer da fase
             auxFase->bola    = criaBola(posY, forma);   //cria bola da fase
@@ -193,20 +195,21 @@ Elemento carregaElemento(string arquivo, Elemento *auxElemento){    //cria um Fa
             break;
     }
     arq.close();
-    return *auxElemento;
+    return auxElemento;
 }
 
-Elemento passaFase(Fase *fase, char *textoTransicao, Elemento elemento, queue<string> elementos){
+Elemento *passaFase(Fase *fase, char *textoTransicao, Elemento *elemento, queue<string> elementos){
     elementos.pop();
-    elemento = carregaElemento(elementos.front(), &elemento);
-    switch(elemento.tipo){
+    elemento = carregaElemento(elementos.front(), elemento);
+    switch(elemento->tipo){
         case 0:
-            free(fase);
-            fase = (Fase*) elemento.item;
+            cout << "teste" << endl;
+            cout << fase->alvos.size() << endl;
+            fase = (Fase*) elemento->item;
+            cout << fase->alvos.size() << endl;
             break;
         case 1:
-            free(textoTransicao);
-            textoTransicao = (char*) elemento.item;
+            textoTransicao = (char*) elemento->item;
             break;
     }
     return elemento;
@@ -260,16 +263,16 @@ int main( int argc, char* args[] ){
 
     //Carrega e inicia fases
     queue<string> elementos = preparaFases();
-    Elemento elemento;
-    elemento = carregaElemento(elementos.front(), &elemento);
-    Fase *fase;
+    Elemento *elemento;
+    elemento = carregaElemento(elementos.front(), elemento);
+    Fase fase;
     char *textoTransicao;
-    switch(elemento.tipo){
+    switch(elemento->tipo){//gambiarra provisoria
         case 0:
-            fase = (Fase*) elemento.item;
+            fase = *((Fase*) elemento->item);
             break;
         case 1:
-            textoTransicao = (char*) elemento.item;
+            textoTransicao = (char*) elemento->item;
             break;
     }
 
@@ -286,7 +289,7 @@ int main( int argc, char* args[] ){
 
         //captura teclas pressionadas
 
-        switch(elemento.tipo){
+        switch(elemento->tipo){
             case 0:
                 if(evento.tipoEvento == PIG_EVENTO_TECLADO){
                     if(evento.teclado.acao == PIG_TECLA_PRESSIONADA && tempo==0){
@@ -322,8 +325,9 @@ int main( int argc, char* args[] ){
                     StopAudio(somImpacto);
                     StopAudio(somLancamento);
                     //Verifica se a fase esta concluida
-                    if(fase.alvos.size()==0) elemento = passaFase(fase, textoTransicao, elemento, elementos);
-                    else repeteFase(&fase, elemento);   //Reinicia fase
+                    cout << fase.alvos.size() << endl;
+                    if(fase.alvos.size()==0) elemento = passaFase(&fase, textoTransicao, elemento, elementos);
+                    //else repeteFase(&fase, elemento);   //Reinicia fase
                     SetColoracaoSprite(espaco, BRANCO);     //Retorna a coloração original
                     Espera(250);
                 }
@@ -395,7 +399,7 @@ int main( int argc, char* args[] ){
             case 1:
                 if(evento.tipoEvento == PIG_EVENTO_TECLADO){
                     if(evento.teclado.tecla == PIG_TECLA_ENTER){
-                        elemento = passaFase(fase, textoTransicao, elemento, elementos);
+                        elemento = passaFase(&fase, textoTransicao, elemento, elementos);
                         break;
                     }
                 }

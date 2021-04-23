@@ -16,9 +16,11 @@ PIG_Teclado meuTeclado;     //variável como mapeamento do teclado
 #define COR_CUSTOMIZADA2 ((PIG_Cor){86,232,13,255}) //COR CUSTOMIZADA2 verde claro verde
 
 int seta;
+bool estado;
 double tempo;
 vector<int> bolas;
 vector<int> alvos;
+queue<string> elementos;
 
 typedef struct Trajeto{
     int x[32], y[32];       //coordenadas dos vertices entre as linhas que formam a parabola do trajeto
@@ -156,7 +158,6 @@ Bola criaBola(int posY, int forma){//Função para cria uma bola
 }
 
 Elemento *carregaElemento(string arquivo, Elemento *auxElemento){    //cria um Fase a partir de um arquivo texto
-    cout << arquivo << endl;
     if(auxElemento!=NULL){
         if(auxElemento->item!=NULL) free(auxElemento->item);
         free(auxElemento);
@@ -167,8 +168,8 @@ Elemento *carregaElemento(string arquivo, Elemento *auxElemento){    //cria um F
     int forma, posX, posY;
     string textoLido;
     arq >> auxElemento->tipo;
-    Fase *auxFase;
-    char *textoTransicao;
+    Fase *auxFase = NULL;
+    char *textoTransicao = NULL;
     switch(auxElemento->tipo){
         case 0:
             auxFase = (Fase*) malloc(sizeof(Fase));
@@ -199,24 +200,28 @@ Elemento *carregaElemento(string arquivo, Elemento *auxElemento){    //cria um F
     return auxElemento;
 }
 
-Elemento *passaFase(Fase **fase, char **textoTransicao, Elemento *elemento, queue<string> *elementos){
-    cout << (*elementos).size() << endl;
-    (*elementos).pop();
-    if (elemento!=NULL) free(elemento);
-    elemento = carregaElemento((*elementos).front(), elemento);
-    switch(elemento->tipo){
-        case 0:
-            *fase = (Fase*) elemento->item;
-            break;
-        case 1:
-            *textoTransicao = (char*) elemento->item;
-            break;
+Elemento *passaFase(Fase **fase, char **textoTransicao, Elemento *elemento){
+    if(elementos.empty()) estado = false; //quebra loop
+    else{
+        elementos.pop();
+        if (elemento!=NULL) free(elemento);
+        elemento = carregaElemento(elementos.front(), elemento);
+        switch(elemento->tipo){
+            case 0:
+                *fase = (Fase*) elemento->item;
+                break;
+            case 1:
+                *textoTransicao = (char*) elemento->item;
+                break;
+        }
     }
     return elemento;
 }
 
-void repeteFase(Fase **fase, Elemento *elemento){
+Elemento *repeteFase(Fase **fase, Elemento *elemento){
+    elemento = carregaElemento(elementos.front(), elemento);
     *fase = (Fase*) elemento->item;
+    return elemento;
 }
 
 int main( int argc, char* args[] ){
@@ -233,7 +238,7 @@ int main( int argc, char* args[] ){
     int fonteAngulo     = CriaFonteNormal(".//fontes//FredokaOne-Regular.ttf", 48, COR_CUSTOMIZADA);
     int fonteAlvos      = CriaFonteNormal(".//fontes//FredokaOne-Regular.ttf", 32, AMARELO);
     int fonteIndicacao  = CriaFonteNormal(".//fontes//FredokaOne-Regular.ttf", 16, COR_CUSTOMIZADA2);
-    int fonteTransicao  = CriaFonteNormal(".//fontes//FredokaOne-Regular.ttf", 24, BRANCO);
+    int fonteTransicao  = CriaFonteNormal(".//fontes//FredokaOne-Regular.ttf", 24, BRANCO, 1, VERMELHO);
 
     CarregaBackground(".//sounds//background.mp3");                         //cria musica de fundo
     int somImpacto      = CriaAudio(".//sounds//soundImpacto.mp3",0);       //cria audio de impacto
@@ -262,7 +267,7 @@ int main( int argc, char* args[] ){
     MoveSprite(baixo, 576, 10);
 
     //Carrega e inicia fases
-    queue<string> elementos = preparaFases();
+    elementos = preparaFases();
     Fase *fase = NULL;
     char *textoTransicao = NULL;
     Elemento *elemento;
@@ -281,7 +286,9 @@ int main( int argc, char* args[] ){
 
     //PlayBackground();   //Começa musica de fundo
 
-    while(JogoRodando()){
+    estado = JogoRodando();
+
+    while(estado){
         //pega um evento que tenha ocorrido desde a última passada do loop
 
         evento = GetEvento();
@@ -325,8 +332,8 @@ int main( int argc, char* args[] ){
                     StopAudio(somImpacto);
                     StopAudio(somLancamento);
                     //Verifica se a fase esta concluida
-                    if(fase->alvos.empty()) elemento = passaFase(&fase, &textoTransicao, elemento, &elementos);
-                    else repeteFase(&fase, elemento);   //Reinicia fase
+                    if(fase->alvos.empty()) elemento = passaFase(&fase, &textoTransicao, elemento);
+                    else elemento = repeteFase(&fase, elemento);   //Reinicia fase
                     SetColoracaoSprite(espaco, BRANCO);     //Retorna a coloração original
                     Espera(250);
                 }
@@ -397,12 +404,12 @@ int main( int argc, char* args[] ){
             case 1:
                 if(evento.tipoEvento == PIG_EVENTO_TECLADO){
                     if(evento.teclado.tecla == PIG_TECLA_ENTER){
-                        elemento = passaFase(&fase, &textoTransicao, elemento, &elementos);
+                        elemento = passaFase(&fase, &textoTransicao, elemento);
                         break;
                     }
                 }
                 IniciaDesenho();
-                DesenhaSpriteSimples(".//img//fundo.png", 0, 0, 0);//Desenha fundo
+                DesenhaSpriteSimples(".//img//fundo2.png", 0, 0, 0);//Desenha fundo
                 EscreverCentralizada(textoTransicao, T_LARGURA/2, T_ALTURA/2, BRANCO, fonteTransicao);
                 EscreverCentralizada("Pressione ENTER para continuar ...", T_LARGURA/2, T_ALTURA/2-200, BRANCO, fonteTransicao);
                 EncerraDesenho();

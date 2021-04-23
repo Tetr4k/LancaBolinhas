@@ -156,6 +156,7 @@ Bola criaBola(int posY, int forma){//Função para cria uma bola
 }
 
 Elemento *carregaElemento(string arquivo, Elemento *auxElemento){    //cria um Fase a partir de um arquivo texto
+    cout << arquivo << endl;
     if(auxElemento!=NULL){
         if(auxElemento->item!=NULL) free(auxElemento->item);
         free(auxElemento);
@@ -198,25 +199,24 @@ Elemento *carregaElemento(string arquivo, Elemento *auxElemento){    //cria um F
     return auxElemento;
 }
 
-Elemento *passaFase(Fase *fase, char *textoTransicao, Elemento *elemento, queue<string> elementos){
-    elementos.pop();
-    elemento = carregaElemento(elementos.front(), elemento);
+Elemento *passaFase(Fase **fase, char **textoTransicao, Elemento *elemento, queue<string> *elementos){
+    cout << (*elementos).size() << endl;
+    (*elementos).pop();
+    if (elemento!=NULL) free(elemento);
+    elemento = carregaElemento((*elementos).front(), elemento);
     switch(elemento->tipo){
         case 0:
-            cout << "teste" << endl;
-            cout << fase->alvos.size() << endl;
-            fase = (Fase*) elemento->item;
-            cout << fase->alvos.size() << endl;
+            *fase = (Fase*) elemento->item;
             break;
         case 1:
-            textoTransicao = (char*) elemento->item;
+            *textoTransicao = (char*) elemento->item;
             break;
     }
     return elemento;
 }
 
-void repeteFase(Fase *fase, Elemento elemento){
-    fase = (Fase*) elemento.item;
+void repeteFase(Fase **fase, Elemento *elemento){
+    *fase = (Fase*) elemento->item;
 }
 
 int main( int argc, char* args[] ){
@@ -263,18 +263,19 @@ int main( int argc, char* args[] ){
 
     //Carrega e inicia fases
     queue<string> elementos = preparaFases();
+    Fase *fase = NULL;
+    char *textoTransicao = NULL;
     Elemento *elemento;
     elemento = carregaElemento(elementos.front(), elemento);
-    Fase fase;
-    char *textoTransicao;
     switch(elemento->tipo){//gambiarra provisoria
         case 0:
-            fase = *((Fase*) elemento->item);
+            fase = (Fase*) elemento->item;
             break;
         case 1:
             textoTransicao = (char*) elemento->item;
             break;
     }
+
 
     //loop principal do jogo
 
@@ -294,23 +295,23 @@ int main( int argc, char* args[] ){
                 if(evento.tipoEvento == PIG_EVENTO_TECLADO){
                     if(evento.teclado.acao == PIG_TECLA_PRESSIONADA && tempo==0){
                         if(evento.teclado.tecla == PIG_TECLA_BARRAESPACO){//Atira a bola usando espaço
-                            DespausaTimer(fase.timer);
+                            DespausaTimer(fase->timer);
                             PlayAudio(somLancamento);
-                            MudaModoAnimacao(fase.bola.desenho, 1, 0);
+                            MudaModoAnimacao(fase->bola.desenho, 1, 0);
                             SetColoracaoSprite(espaco, VERMELHO);   //Ajusta coloração da tecla para espaço
                         }
-                        if(evento.teclado.tecla == PIG_TECLA_CIMA && fase.bola.angulo<85){//Aumenta angulo usando as seta para cima
-                            fase.bola.angulo+=0.2;
-                            SetAnguloAnimacao(fase.bola.desenho, fase.bola.angulo); //Ajusta angulo da bola
-                            SetAnguloSprite(fase.seta, fase.bola.angulo);           //Ajusta angulo da seta
-                            fase.bola.trajeto = calculaTrajeto(fase.bola);          //Ajusta trajeto
+                        if(evento.teclado.tecla == PIG_TECLA_CIMA && fase->bola.angulo<85){//Aumenta angulo usando as seta para cima
+                            fase->bola.angulo+=0.2;
+                            SetAnguloAnimacao(fase->bola.desenho, fase->bola.angulo); //Ajusta angulo da bola
+                            SetAnguloSprite(fase->seta, fase->bola.angulo);           //Ajusta angulo da seta
+                            fase->bola.trajeto = calculaTrajeto(fase->bola);          //Ajusta trajeto
                             SetColoracaoSprite(cima, VERMELHO);                     //Ajusta coloração da tecla para cima
                         }
-                        if(evento.teclado.tecla == PIG_TECLA_BAIXO && fase.bola.angulo>-85){//diminui angulo usando as seta para cima
-                            fase.bola.angulo-=0.2;
-                            SetAnguloAnimacao(fase.bola.desenho, fase.bola.angulo); //Ajusta angulo da bola
-                            SetAnguloSprite(fase.seta, fase.bola.angulo);           //Ajusta angulo da seta
-                            fase.bola.trajeto = calculaTrajeto(fase.bola);          //Ajusta trajeto
+                        if(evento.teclado.tecla == PIG_TECLA_BAIXO && fase->bola.angulo>-85){//diminui angulo usando as seta para cima
+                            fase->bola.angulo-=0.2;
+                            SetAnguloAnimacao(fase->bola.desenho, fase->bola.angulo); //Ajusta angulo da bola
+                            SetAnguloSprite(fase->seta, fase->bola.angulo);           //Ajusta angulo da seta
+                            fase->bola.trajeto = calculaTrajeto(fase->bola);          //Ajusta trajeto
                             SetColoracaoSprite(baixo, VERMELHO);                    //Ajusta coloração da tecla para baixo
                         }
                     }
@@ -319,33 +320,30 @@ int main( int argc, char* args[] ){
                         SetColoracaoSprite(baixo, BRANCO);  //*
                     }
                 }
-
-                if(fase.bola.y<D_BAIXO/2){  //Verifica posição da bola
+                if(fase->bola.y<D_BAIXO/2){  //Verifica posição da bola
                     //Pausa efeitos sonoros
                     StopAudio(somImpacto);
                     StopAudio(somLancamento);
                     //Verifica se a fase esta concluida
-                    cout << fase.alvos.size() << endl;
-                    if(fase.alvos.size()==0) elemento = passaFase(&fase, textoTransicao, elemento, elementos);
-                    //else repeteFase(&fase, elemento);   //Reinicia fase
+                    if(fase->alvos.empty()) elemento = passaFase(&fase, &textoTransicao, elemento, &elementos);
+                    else repeteFase(&fase, elemento);   //Reinicia fase
                     SetColoracaoSprite(espaco, BRANCO);     //Retorna a coloração original
                     Espera(250);
                 }
                 else{
-                    tempo = TempoDecorrido(fase.timer); //Calcula tempo
-                    fase.bola.y = calculaY(fase.bola);  //Calcula y
-                    fase.bola.x = calculaX(fase.bola);  //Calcula x
-                    MoveAnimacao(fase.bola.desenho, fase.bola.x, fase.bola.y);  //Atualiza posição do objeto
+                    tempo = TempoDecorrido(fase->timer); //Calcula tempo
+                    fase->bola.y = calculaY(fase->bola);  //Calcula y
+                    fase->bola.x = calculaX(fase->bola);  //Calcula x
+                    MoveAnimacao(fase->bola.desenho, fase->bola.x, fase->bola.y);  //Atualiza posição do objeto
                 }
-
-                for(std::vector<int>::iterator i=fase.alvos.begin(); i!=fase.alvos.end(); ++i) TrataAutomacaoObjeto(*i);
-                TrataAutomacaoAnimacao(fase.bola.desenho);
-                TrataAutomacaoSprite(fase.seta);
+                for(std::vector<int>::iterator i=fase->alvos.begin(); i!=fase->alvos.end(); ++i) TrataAutomacaoObjeto(*i);
+                TrataAutomacaoAnimacao(fase->bola.desenho);
+                TrataAutomacaoSprite(fase->seta);
 
                 //Verifica colisão da bola com cada alvo
-                for(int i=0; i<fase.alvos.size(); i++) if(TestaColisaoAnimacaoObjeto(fase.bola.desenho, fase.alvos[i])){//Teste de colisão
+                for(int i=0; i<fase->alvos.size(); i++) if(TestaColisaoAnimacaoObjeto(fase->bola.desenho, fase->alvos[i])){//Teste de colisão
                     //Remove alvo
-                    fase.alvos.erase(fase.alvos.begin()+i);
+                    fase->alvos.erase(fase->alvos.begin()+i);
                     PlayAudio(somImpacto);
                 }
 
@@ -358,13 +356,13 @@ int main( int argc, char* args[] ){
                 DesenhaSpriteSimples(".//img//fundo.png", 0, 0, 0);//Desenha fundo
 
                 //Desenha Fase
-                for(std::vector<int>::iterator i=fase.alvos.begin(); i!=fase.alvos.end(); ++i) DesenhaObjeto(*i);   //Desenha alvos
+                for(std::vector<int>::iterator i=fase->alvos.begin(); i!=fase->alvos.end(); ++i) DesenhaObjeto(*i);   //Desenha alvos
                 //Verifica se a bola esta parada e desenha a seta e o trajeto da bola
                 if(tempo==0){
-                    DesenhaSprite(fase.seta);       //Desenha a seta
-                    DesenhaLinhasSequencia(fase.bola.trajeto.x, fase.bola.trajeto.y, 32, AMARELO); //Desenha trajeto
+                    DesenhaSprite(fase->seta);       //Desenha a seta
+                    DesenhaLinhasSequencia(fase->bola.trajeto.x, fase->bola.trajeto.y, 32, AMARELO); //Desenha trajeto
                 };
-                DesenhaAnimacao(fase.bola.desenho); //Desenha bola
+                DesenhaAnimacao(fase->bola.desenho); //Desenha bola
 
                 //Desenha interface
                 DesenhaSpriteSimples(".//img//interface.png", 0, 0, 0); //Desenha fundo da interface
@@ -379,16 +377,16 @@ int main( int argc, char* args[] ){
                 EscreverEsquerda(" Diminuir angulo", 600, 15, COR_CUSTOMIZADA2, fonteIndicacao);
 
                 EscreverEsquerda("Angulo: ", 8, 4, COR_CUSTOMIZADA, fonteAngulo);              //Escreve o angulo na interface
-                EscreveDoubleDireita(fase.bola.angulo, 1, 304, 4, COR_CUSTOMIZADA, fonteAngulo);
+                EscreveDoubleDireita(fase->bola.angulo, 1, 304, 4, COR_CUSTOMIZADA, fonteAngulo);
                 EscreverEsquerda(" graus", 304, 4, COR_CUSTOMIZADA, fonteAngulo);
 
                 //Escreve quantidade de alvos
-                if(fase.alvos.size()>1){
-                    EscreveInteiroDireita(fase.alvos.size(), 1014, 4, AMARELO, fonteAlvos);
+                if(fase->alvos.size()>1){
+                    EscreveInteiroDireita(fase->alvos.size(), 1014, 4, AMARELO, fonteAlvos);
                     EscreverDireita(" alvos restantes!" , 1272, 4, AMARELO, fonteAlvos);
                 }
-                else if(fase.alvos.size()==1){
-                    EscreveInteiroDireita(fase.alvos.size(), 1048, 4, AMARELO, fonteAlvos);
+                else if(fase->alvos.size()==1){
+                    EscreveInteiroDireita(fase->alvos.size(), 1048, 4, AMARELO, fonteAlvos);
                     EscreverDireita(" alvo restante!" , 1272, 4, AMARELO, fonteAlvos);
                 }
                 else EscreverDireita("Nenhum alvo restante!" , 1272, 4, AMARELO, fonteAlvos);
@@ -399,17 +397,21 @@ int main( int argc, char* args[] ){
             case 1:
                 if(evento.tipoEvento == PIG_EVENTO_TECLADO){
                     if(evento.teclado.tecla == PIG_TECLA_ENTER){
-                        elemento = passaFase(&fase, textoTransicao, elemento, elementos);
+                        elemento = passaFase(&fase, &textoTransicao, elemento, &elementos);
                         break;
                     }
                 }
                 IniciaDesenho();
+                DesenhaSpriteSimples(".//img//fundo.png", 0, 0, 0);//Desenha fundo
                 EscreverCentralizada(textoTransicao, T_LARGURA/2, T_ALTURA/2, BRANCO, fonteTransicao);
                 EscreverCentralizada("Pressione ENTER para continuar ...", T_LARGURA/2, T_ALTURA/2-200, BRANCO, fonteTransicao);
                 EncerraDesenho();
                 break;
         }
     }
+    free(elemento);
+    free(fase);
+    free(textoTransicao);
     //o jogo será encerrado
     FinalizaJogo();
     return 0;

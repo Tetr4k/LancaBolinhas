@@ -1,5 +1,5 @@
 (tipo de arquivo, 0 para fase)
-(x) (tipo[0;2]) bola
+(y) (tipo[0;2]) bola
 (y) (x) (tipo[0;19]) primeiro alvo
 (y) (x) (tipo[0;19]) segundo alvo
 (y) (x) (tipo[0;19]) terceiro alvo

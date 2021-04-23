@@ -1,1 +1,1 @@
-1 Quando arremessamos esse objeto diretamente para a frente, ele irá cair
+1 Quando arremessamos esse objeto em paralelo ao solo, ele simplesmente cai.

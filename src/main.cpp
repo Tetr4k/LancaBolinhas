@@ -20,7 +20,7 @@ bool estado;
 double tempo;
 vector<int> bolas;
 vector<int> alvos;
-queue<string> elementos;
+queue<string> arquivosEtapas;
 
 typedef struct Trajeto{
     int x[32], y[32];       //coordenadas dos vertices entre as linhas que formam a parabola do trajeto
@@ -38,10 +38,10 @@ typedef struct Fase{
     vector<int> alvos;      //alvos da fase
 }Fase;
 
-typedef struct Elemento{
+typedef struct Etapa{
     int tipo;
     void *item;
-}Elemento;
+}Etapa;
 
 vector<int> criaModeloAlvos(){//funcao para criar modelo dos alvos
     int alvo, tam;
@@ -132,7 +132,7 @@ Trajeto calculaTrajeto(Bola bola){//Função para calcular trajeto da bola
     return auxTrajeto;
 }
 
-queue<string> preparaFases(){//le arquivo com o nome dos arquivos de fase
+queue<string> preparaEtapas(){//le arquivo com o nome dos arquivos de fase
     ifstream arq;
     arq.open("./fases/arquivosFases.txt", std::ifstream::in);
     //cria arquivo e pilha de arquivos
@@ -157,20 +157,20 @@ Bola criaBola(int posY, int forma){//Função para cria uma bola
     return auxBola;
 }
 
-Elemento *carregaElemento(string arquivo, Elemento *auxElemento){    //cria um Fase a partir de um arquivo texto
-    if(auxElemento!=NULL){
-        if(auxElemento->item!=NULL) free(auxElemento->item);
-        free(auxElemento);
+Etapa *carregaEtapa(string arquivo, Etapa *auxEtapa){    //cria um Fase a partir de um arquivo texto
+    if(auxEtapa!=NULL){
+        if(auxEtapa->item!=NULL) free(auxEtapa->item);
+        free(auxEtapa);
     }
-    auxElemento = (Elemento*) malloc(sizeof(Elemento));
+    auxEtapa = (Etapa*) malloc(sizeof(Etapa));
     ifstream arq;
     arq.open(arquivo, std::ifstream::in);
     int forma, posX, posY;
     string textoLido;
-    arq >> auxElemento->tipo;
+    arq >> auxEtapa->tipo;
     Fase *auxFase = NULL;
     char *textoTransicao = NULL;
-    switch(auxElemento->tipo){
+    switch(auxEtapa->tipo){
         case 0:
             auxFase = (Fase*) malloc(sizeof(Fase));
             arq >> posY >> forma;                       //l� posi��o e tipo da bola
@@ -187,41 +187,55 @@ Elemento *carregaElemento(string arquivo, Elemento *auxElemento){    //cria um F
                 MoveObjeto(alvo, posX, posY+D_BAIXO+D_BORDA);
                 auxFase->alvos.push_back(alvo);
             }
-            auxElemento->item = auxFase;
+            auxEtapa->item = auxFase;
             break;
         case 1:
             textoTransicao = (char*) malloc(50*sizeof(char));
             getline(arq, textoLido);
             strcpy(textoTransicao, textoLido.c_str());
-            auxElemento->item = textoTransicao;
+            auxEtapa->item = textoTransicao;
             break;
     }
     arq.close();
-    return auxElemento;
+    return auxEtapa;
 }
 
-Elemento *passaFase(Fase **fase, char **textoTransicao, Elemento *elemento){
-    if(elementos.empty()) estado = false; //quebra loop
+Etapa *iniciaEtapa(Fase **fase, char **textoTransicao){
+    Etapa *auxEtapa = carregaEtapa(arquivosEtapas.front(), NULL);
+    switch(auxEtapa->tipo){//gambiarra provisoria
+        case 0:
+            *fase = (Fase*) auxEtapa->item;
+            break;
+        case 1:
+            *textoTransicao = (char*) auxEtapa->item;
+            break;
+    }
+    return auxEtapa;
+}
+
+Etapa *passaEtapa(Fase **fase, char **textoTransicao, Etapa *etapa){
+    if(arquivosEtapas.empty()) estado = false; //quebra loop
     else{
-        elementos.pop();
-        if (elemento!=NULL) free(elemento);
-        elemento = carregaElemento(elementos.front(), elemento);
-        switch(elemento->tipo){
+        arquivosEtapas.pop();
+        if (etapa!=NULL) free(etapa);
+        etapa = carregaEtapa(arquivosEtapas.front(), etapa);
+        switch(etapa->tipo){
             case 0:
-                *fase = (Fase*) elemento->item;
+                *fase = (Fase*) etapa->item;
                 break;
             case 1:
-                *textoTransicao = (char*) elemento->item;
+                *textoTransicao = (char*) etapa->item;
                 break;
         }
     }
-    return elemento;
+    return etapa;
 }
 
-Elemento *repeteFase(Fase **fase, Elemento *elemento){
-    elemento = carregaElemento(elementos.front(), elemento);
-    *fase = (Fase*) elemento->item;
-    return elemento;
+Etapa *repeteFase(Fase **fase, Etapa *etapa){
+    free(etapa);
+    etapa = carregaEtapa(arquivosEtapas.front(), etapa);
+    *fase = (Fase*) etapa->item;
+    return etapa;
 }
 
 int main( int argc, char* args[] ){
@@ -266,21 +280,11 @@ int main( int argc, char* args[] ){
     SetDimensoesSprite(baixo, 25, 25);
     MoveSprite(baixo, 576, 10);
 
-    //Carrega e inicia fases
-    elementos = preparaFases();
+    //Carrega e inicia etapa
     Fase *fase = NULL;
     char *textoTransicao = NULL;
-    Elemento *elemento;
-    elemento = carregaElemento(elementos.front(), elemento);
-    switch(elemento->tipo){//gambiarra provisoria
-        case 0:
-            fase = (Fase*) elemento->item;
-            break;
-        case 1:
-            textoTransicao = (char*) elemento->item;
-            break;
-    }
-
+    arquivosEtapas = preparaEtapas();
+    Etapa *etapa = iniciaEtapa(&fase, &textoTransicao);
 
     //loop principal do jogo
 
@@ -297,7 +301,7 @@ int main( int argc, char* args[] ){
 
         //captura teclas pressionadas
 
-        switch(elemento->tipo){
+        switch(etapa->tipo){
             case 0:
                 if(evento.tipoEvento == PIG_EVENTO_TECLADO){
                     if(evento.teclado.acao == PIG_TECLA_PRESSIONADA && tempo==0){
@@ -332,8 +336,8 @@ int main( int argc, char* args[] ){
                     StopAudio(somImpacto);
                     StopAudio(somLancamento);
                     //Verifica se a fase esta concluida
-                    if(fase->alvos.empty()) elemento = passaFase(&fase, &textoTransicao, elemento);
-                    else elemento = repeteFase(&fase, elemento);   //Reinicia fase
+                    if(fase->alvos.empty()) etapa = passaEtapa(&fase, &textoTransicao, etapa);
+                    else etapa = repeteFase(&fase, etapa);   //Reinicia fase
                     SetColoracaoSprite(espaco, BRANCO);     //Retorna a coloração original
                     Espera(250);
                 }
@@ -404,7 +408,7 @@ int main( int argc, char* args[] ){
             case 1:
                 if(evento.tipoEvento == PIG_EVENTO_TECLADO){
                     if(evento.teclado.tecla == PIG_TECLA_ENTER){
-                        elemento = passaFase(&fase, &textoTransicao, elemento);
+                        etapa = passaEtapa(&fase, &textoTransicao, etapa);
                         break;
                     }
                 }
@@ -416,7 +420,7 @@ int main( int argc, char* args[] ){
                 break;
         }
     }
-    free(elemento);
+    free(etapa);
     free(fase);
     free(textoTransicao);
     //o jogo será encerrado

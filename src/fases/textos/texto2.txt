@@ -1,2 +1,1 @@
-1
-Quando arremessamos esse objeto diretamente para a frente, ele irá cair
+1 Quando arremessamos esse objeto diretamente para a frente, ele irá cair

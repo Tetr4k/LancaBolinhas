@@ -1,2 +1,1 @@
-1
-Se lançarmos esse objeto para o alto, ele vai cair mais a frente
+1 Se lançarmos esse objeto para o alto, ele vai cair mais a frente

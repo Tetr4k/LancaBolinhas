@@ -1,0 +1,1 @@
+(tipo de arquivo, 1 para texto) (texto)

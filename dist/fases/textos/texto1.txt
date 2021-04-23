@@ -1,0 +1,1 @@
+1 Quando lancamos um objeto inclinado em relacao ao solo, temos um movimento chamado lancamento obliquo.

@@ -1,0 +1,1 @@
+1 A bola tera menor alcance se o angulo estiver distante de 45 graus.

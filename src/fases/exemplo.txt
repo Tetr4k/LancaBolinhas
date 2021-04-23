@@ -1,4 +1,0 @@
-(x inicial da bola) (tipo de bola <0 até 2>)
-(y do alvo) (x do alvo) (tipo de alvo <0 até 19>)
-||||||||||||||||||||||||||||||||||||||||||||||||||
-VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV

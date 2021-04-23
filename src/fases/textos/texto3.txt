@@ -1,0 +1,2 @@
+1
+Dependendo do peso do objeto, ele caira mais rapido

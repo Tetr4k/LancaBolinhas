@@ -4,13 +4,4 @@
 ./fases/fasesJogaveis/fase2.txt
 ./fases/textos/texto3.txt
 ./fases/fasesJogaveis/fase3.txt
-./fases/fasesJogaveis/fase4.txt
-./fases/textos/texto4.txt
-./fases/fasesJogaveis/fase5.txt
-./fases/textos/texto5.txt
-./fases/fasesJogaveis/fase6.txt
-./fases/fasesJogaveis/fase7.txt
-./fases/fasesJogaveis/fase8.txt
-./fases/textos/texto6.txt
-./fases/fasesJogaveis/fase9.txt
 ./fases/textos/textoFIM.txt

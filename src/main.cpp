@@ -16,6 +16,7 @@ PIG_Teclado meuTeclado;     //variável como mapeamento do teclado
 #define COR_CUSTOMIZADA2 ((PIG_Cor){86,232,13,255}) //COR CUSTOMIZADA2 verde claro verde
 
 int seta;
+bool estado;
 double tempo;
 vector<int> bolas;
 vector<int> alvos;
@@ -167,8 +168,8 @@ Elemento *carregaElemento(string arquivo, Elemento *auxElemento){    //cria um F
     int forma, posX, posY;
     string textoLido;
     arq >> auxElemento->tipo;
-    Fase *auxFase;
-    char *textoTransicao;
+    Fase *auxFase = NULL;
+    char *textoTransicao = NULL;
     switch(auxElemento->tipo){
         case 0:
             auxFase = (Fase*) malloc(sizeof(Fase));
@@ -200,23 +201,27 @@ Elemento *carregaElemento(string arquivo, Elemento *auxElemento){    //cria um F
 }
 
 Elemento *passaFase(Fase **fase, char **textoTransicao, Elemento *elemento){
-    elementos.pop();
-    if (elemento!=NULL) free(elemento);
-    elemento = carregaElemento(elementos.front(), elemento);
-    switch(elemento->tipo){
-        case 0:
-            *fase = (Fase*) elemento->item;
-            break;
-        case 1:
-            *textoTransicao = (char*) elemento->item;
-            break;
+    if(elementos.empty()) estado = false; //quebra loop
+    else{
+        elementos.pop();
+        if (elemento!=NULL) free(elemento);
+        elemento = carregaElemento(elementos.front(), elemento);
+        switch(elemento->tipo){
+            case 0:
+                *fase = (Fase*) elemento->item;
+                break;
+            case 1:
+                *textoTransicao = (char*) elemento->item;
+                break;
+        }
     }
     return elemento;
 }
 
-void repeteFase(Fase **fase, Elemento *elemento){
+Elemento *repeteFase(Fase **fase, Elemento *elemento){
     elemento = carregaElemento(elementos.front(), elemento);
     *fase = (Fase*) elemento->item;
+    return elemento;
 }
 
 int main( int argc, char* args[] ){
@@ -281,7 +286,9 @@ int main( int argc, char* args[] ){
 
     //PlayBackground();   //Começa musica de fundo
 
-    while(JogoRodando()){
+    estado = JogoRodando();
+
+    while(estado){
         //pega um evento que tenha ocorrido desde a última passada do loop
 
         evento = GetEvento();
@@ -326,7 +333,7 @@ int main( int argc, char* args[] ){
                     StopAudio(somLancamento);
                     //Verifica se a fase esta concluida
                     if(fase->alvos.empty()) elemento = passaFase(&fase, &textoTransicao, elemento);
-                    else repeteFase(&fase, elemento);   //Reinicia fase
+                    else elemento = repeteFase(&fase, elemento);   //Reinicia fase
                     SetColoracaoSprite(espaco, BRANCO);     //Retorna a coloração original
                     Espera(250);
                 }

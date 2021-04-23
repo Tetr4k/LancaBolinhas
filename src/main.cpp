@@ -11,7 +11,7 @@ PIG_Teclado meuTeclado;     //variável como mapeamento do teclado
 #define VELOCIDADE 640      //Velocidade das bolinhas
 #define C_PESO 180          //Um coeficiente para o peso das bolinhas
 #define C_TAM_ALVO 5        //Um coeficiente para o tamanho dos alvos
-#define C_ANGULO 16         //Um coeficiente para o angulo inicial
+#define C_ANGULO 45         //Um coeficiente para o angulo inicial
 #define COR_CUSTOMIZADA ((PIG_Cor){155,232,12,255}) //COR CUSTOMIZADA verde claro amarelo
 #define COR_CUSTOMIZADA2 ((PIG_Cor){86,232,13,255}) //COR CUSTOMIZADA2 verde claro verde
 
@@ -145,34 +145,30 @@ queue<string> preparaEtapas(){//le arquivo com o nome dos arquivos de fase
 
 Bola criaBola(int posY, int forma){//Função para cria uma bola
     Bola auxBola;
-    auxBola.desenho = CriaAnimacao(bolas[forma], 0);     //Cria animação da bola
-    auxBola.g       = C_PESO*(forma+1);                  //Calcula gravidade na bola
-    auxBola.angulo  = C_ANGULO*(forma+1);                //Calcula angulo inicial da bola
-    auxBola.xi      = D_BORDA;                           //Define posição inicial e atual da bola
-    auxBola.x       = auxBola.xi;                        //***
-    auxBola.yi      = posY+D_BAIXO+D_BORDA;              //***
-    auxBola.y       = auxBola.yi;                        //***
-    auxBola.trajeto = calculaTrajeto(auxBola);           //Calcula o trajeto inicial da bola
-    SetAnguloAnimacao(auxBola.desenho, auxBola.angulo);  //Ajusta angulo da animação
+    auxBola.desenho = CriaAnimacao(bolas[forma], 0);    //Cria animação da bola
+    auxBola.g       = C_PESO*(forma+1);                 //Calcula gravidade na bola
+    auxBola.angulo  = C_ANGULO-4.5*posY/50;                    //Calcula angulo inicial da bola
+    auxBola.xi      = D_BORDA;                          //Define posição inicial e atual da bola
+    auxBola.x       = auxBola.xi;                       //***
+    auxBola.yi      = posY+D_BAIXO+D_BORDA;             //***
+    auxBola.y       = auxBola.yi;                       //***
+    auxBola.trajeto = calculaTrajeto(auxBola);          //Calcula o trajeto inicial da bola
+    SetAnguloAnimacao(auxBola.desenho, auxBola.angulo); //Ajusta angulo da animação
     return auxBola;
 }
 
-Etapa *carregaEtapa(string arquivo, Etapa *auxEtapa){    //cria um Fase a partir de um arquivo texto
-    if(auxEtapa!=NULL){
-        if(auxEtapa->item!=NULL) free(auxEtapa->item);
-        free(auxEtapa);
-    }
-    auxEtapa = (Etapa*) malloc(sizeof(Etapa));
+Etapa *carregaEtapa(string arquivo){    //cria um Fase a partir de um arquivo texto
+    Etapa *auxEtapa = (Etapa*) malloc(sizeof(Etapa));
     ifstream arq;
     arq.open(arquivo, std::ifstream::in);
     int forma, posX, posY;
     string textoLido;
     arq >> auxEtapa->tipo;
-    Fase *auxFase = NULL;
-    char *textoTransicao = NULL;
+    Fase *auxFase;
+    char *textoTransicao;
     switch(auxEtapa->tipo){
         case 0:
-            auxFase = (Fase*) malloc(sizeof(Fase));
+            auxFase = new Fase;
             arq >> posY >> forma;                       //l� posi��o e tipo da bola
             tempo = 0;                                  //reseta o tempo da fase
             auxFase->timer   = CriaTimer(1);            //inicia o timer da fase
@@ -201,8 +197,8 @@ Etapa *carregaEtapa(string arquivo, Etapa *auxEtapa){    //cria um Fase a partir
 }
 
 Etapa *iniciaEtapa(Fase **fase, char **textoTransicao){
-    Etapa *auxEtapa = carregaEtapa(arquivosEtapas.front(), NULL);
-    switch(auxEtapa->tipo){//gambiarra provisoria
+    Etapa *auxEtapa = carregaEtapa(arquivosEtapas.front());
+    switch(auxEtapa->tipo){
         case 0:
             *fase = (Fase*) auxEtapa->item;
             break;
@@ -218,7 +214,7 @@ Etapa *passaEtapa(Fase **fase, char **textoTransicao, Etapa *etapa){
     else{
         arquivosEtapas.pop();
         if (etapa!=NULL) free(etapa);
-        etapa = carregaEtapa(arquivosEtapas.front(), etapa);
+        etapa = carregaEtapa(arquivosEtapas.front());
         switch(etapa->tipo){
             case 0:
                 *fase = (Fase*) etapa->item;
@@ -232,8 +228,9 @@ Etapa *passaEtapa(Fase **fase, char **textoTransicao, Etapa *etapa){
 }
 
 Etapa *repeteFase(Fase **fase, Etapa *etapa){
+    delete etapa->item;
     free(etapa);
-    etapa = carregaEtapa(arquivosEtapas.front(), etapa);
+    etapa = carregaEtapa(arquivosEtapas.front());
     *fase = (Fase*) etapa->item;
     return etapa;
 }
@@ -252,7 +249,7 @@ int main( int argc, char* args[] ){
     int fonteAngulo     = CriaFonteNormal(".//fontes//FredokaOne-Regular.ttf", 48, COR_CUSTOMIZADA);
     int fonteAlvos      = CriaFonteNormal(".//fontes//FredokaOne-Regular.ttf", 32, AMARELO);
     int fonteIndicacao  = CriaFonteNormal(".//fontes//FredokaOne-Regular.ttf", 16, COR_CUSTOMIZADA2);
-    int fonteTransicao  = CriaFonteNormal(".//fontes//FredokaOne-Regular.ttf", 24, BRANCO, 1, VERMELHO);
+    int fonteTransicao  = CriaFonteNormal(".//fontes//FredokaOne-Regular.ttf", 24, BRANCO, 1, AZUL);
 
     CarregaBackground(".//sounds//background.mp3");                         //cria musica de fundo
     int somImpacto      = CriaAudio(".//sounds//soundImpacto.mp3",0);       //cria audio de impacto
@@ -281,14 +278,14 @@ int main( int argc, char* args[] ){
     MoveSprite(baixo, 576, 10);
 
     //Carrega e inicia etapa
-    Fase *fase = NULL;
-    char *textoTransicao = NULL;
+    Fase *fase;
+    char *textoTransicao;
     arquivosEtapas = preparaEtapas();
     Etapa *etapa = iniciaEtapa(&fase, &textoTransicao);
 
     //loop principal do jogo
 
-    //PlayBackground();   //Começa musica de fundo
+    PlayBackground();   //Começa musica de fundo
 
     estado = JogoRodando();
 
@@ -421,7 +418,7 @@ int main( int argc, char* args[] ){
         }
     }
     free(etapa);
-    free(fase);
+    delete fase;
     free(textoTransicao);
     //o jogo será encerrado
     FinalizaJogo();

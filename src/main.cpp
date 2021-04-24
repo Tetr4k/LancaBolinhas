@@ -4,6 +4,7 @@
 PIG_Evento evento;          //evento ser tratadoi a cada pssada do loop principal
 PIG_Teclado meuTeclado;     //variável como mapeamento do teclado
 
+//Constantes
 #define T_LARGURA 1280      //LARGURA DA TELA
 #define T_ALTURA 720        //ALTURA  DA TELA
 #define D_BORDA 32          //Distancia da borda geral
@@ -15,38 +16,44 @@ PIG_Teclado meuTeclado;     //variável como mapeamento do teclado
 #define COR_CUSTOMIZADA ((PIG_Cor){155,232,12,255}) //COR CUSTOMIZADA verde claro amarelo
 #define COR_CUSTOMIZADA2 ((PIG_Cor){86,232,13,255}) //COR CUSTOMIZADA2 verde claro verde
 
-int seta;
-bool estado;
-double tempo;
-vector<int> bolas;
-vector<int> alvos;
-queue<string> arquivosEtapas;
+//Globais
+int seta;                       //Sprite da seta
+bool estado;                    //Estado do jogo(Rodando ou não)
+double tempo;                   //Tempo
+vector<int> bolas;              //Animações das bolas
+vector<int> alvos;              //Objetos dos alvos
+queue<string> arquivosEtapas;   //Fila de arquivos das etapas
 
+//Estrutura para o trajeto da bolinha
 typedef struct Trajeto{
-    int x[32], y[32];       //coordenadas dos vertices entre as linhas que formam a parabola do trajeto
+    int x[32], y[32];   //vetores de coordenadas dos vertices entre as linhas que formam a parabola do trajeto
 }Trajeto;
 
+//Estrutura da Bola
 typedef struct Bola{
-    double x, y, xi, yi, g, angulo; //x atual, y atual, x inicial, y inicial, gravidade sob a bola e angulo da bola
-    int desenho;                    //anima��o da bola
-    Trajeto trajeto;                //trajeto da bola
+    double x, y, xi, yi, g, angulo; //x atual, y atual, x inicial, y inicial, "gravidade"  na bola e angulo da bola
+    int desenho;                    //Animacaoo da bola
+    Trajeto trajeto;                //Trajeto da bola
 }Bola;
 
+//Estrutura da Fase
 typedef struct Fase{
-    int seta, timer;        //seta da fase, cronometro da fase;
-    Bola bola;              //bola da fase
-    vector<int> alvos;      //alvos da fase
+    int seta, timer;        //Seta na fase, Cronometro na fase
+    Bola bola;              //Bola da fase
+    vector<int> alvos;      //Alvos da fase
 }Fase;
 
+//Estrutura generica da etapa
 typedef struct Etapa{
-    int tipo;
-    void *item;
+    int tipo;   //Tipo da estrutura 0-1
+    void *item; //Ponteiro para estrutura (Fase ou char*)
 }Etapa;
 
-vector<int> criaModeloAlvos(){//funcao para criar modelo dos alvos
+//Funcao para criar modelo dos alvos
+vector<int> criaModeloAlvos(){
     int alvo, tam;
     vector<int> vetorAlvos;
-    //carrega sprite do alvo e cria varia��es
+    //Carrega sprite do alvo e cria variacoes
     for(int i=0; i<20; i++){
         tam = i*C_TAM_ALVO+20;
         alvo = CriaObjeto(".//img//alvo.png", 0);
@@ -59,13 +66,14 @@ vector<int> criaModeloAlvos(){//funcao para criar modelo dos alvos
     return vetorAlvos;
 }
 
-vector<int> criaModeloBolas(){//funcao para criar modelo das bolas
+//Funcao para criar modelo das bolas
+vector<int> criaModeloBolas(){
     vector<int> vetorBolas;
-    //carrega folhas de sprites das bolas
+    //Carrega folhas de sprites das bolas
     int bola1 = CriaAnimacao(".//img//bola1.png", 0);
     int bola2 = CriaAnimacao(".//img//bola2.png", 0);
     int bola3 = CriaAnimacao(".//img//bola3.png", 0);
-    //define a fisica da bola
+    //Define a fisica da bola
     SetDimensoesAnimacao(bola1, 48, 48);
     SetDimensoesAnimacao(bola2, 40, 40);
     SetDimensoesAnimacao(bola3, 40, 40);
@@ -78,11 +86,11 @@ vector<int> criaModeloBolas(){//funcao para criar modelo das bolas
     DefineTipoColisaoAnimacao(bola1, PIG_COLISAO_CIRCULAR);
     DefineTipoColisaoAnimacao(bola2, PIG_COLISAO_CIRCULAR);
     DefineTipoColisaoAnimacao(bola3, PIG_COLISAO_CIRCULAR);
-    //carrega anima��o da bola
+    //Carrega animacao da bola
     CarregaFramesPorLinhaAnimacao(bola1, 1, 1, 10);
     CarregaFramesPorLinhaAnimacao(bola2, 1, 1, 10);
     CarregaFramesPorLinhaAnimacao(bola3, 1, 1, 10);
-    //define anima��o da bola parada
+    //Define animacao da bola parada
     CriaModoAnimacao(bola1, 0, 1);
     CriaModoAnimacao(bola2, 0, 1);
     CriaModoAnimacao(bola3, 0, 1);
@@ -92,7 +100,7 @@ vector<int> criaModeloBolas(){//funcao para criar modelo das bolas
     MudaModoAnimacao(bola1, 0, 0);
     MudaModoAnimacao(bola2, 0, 0);
     MudaModoAnimacao(bola3, 0, 0);
-    //define anima��o da bola em movimento
+    //Define animacao da bola em movimento
     CriaModoAnimacao(bola1, 1, 1);
     CriaModoAnimacao(bola2, 1, 1);
     CriaModoAnimacao(bola3, 1, 1);
@@ -101,24 +109,27 @@ vector<int> criaModeloBolas(){//funcao para criar modelo das bolas
         InsereFrameAnimacao(bola2, 1, i+1, 0.06);
         InsereFrameAnimacao(bola3, 1, i+1, 0.08);
     }
-    //insere bolas no vetor
+    //Insere bolas no vetor
     vetorBolas.push_back(bola1);
     vetorBolas.push_back(bola2);
     vetorBolas.push_back(bola3);
     return vetorBolas;
 }
 
-int calculaX(Bola bola){//Função para calcular X
+//Função para calcular X
+int calculaX(Bola bola){
     double radiano = bola.angulo*M_PI/180.0;    //Converte angulo para radiano
     return bola.xi + VELOCIDADE*cos(radiano)*tempo;
 }
 
-int calculaY(Bola bola){//Função para calcular Y
+//Função para calcular Y
+int calculaY(Bola bola){
     double radiano = bola.angulo*M_PI/180.0;    //Converte angulo para radiano
     return bola.yi + VELOCIDADE*sin(radiano)*tempo-bola.g*pow(tempo, 2)/2;
 }
 
-Trajeto calculaTrajeto(Bola bola){//Função para calcular trajeto da bola
+//Função para calcular trajeto da bola
+Trajeto calculaTrajeto(Bola bola){
     Trajeto auxTrajeto;
     int alt, lag;
     GetDimensoesAnimacao(bola.desenho, &alt, &lag); //Pega altura e largura da bola
@@ -132,18 +143,20 @@ Trajeto calculaTrajeto(Bola bola){//Função para calcular trajeto da bola
     return auxTrajeto;
 }
 
-queue<string> preparaEtapas(){//le arquivo com o nome dos arquivos de fase
+//Le arquivo com o nome dos arquivos de Etapa
+queue<string> preparaEtapas(){
     ifstream arq;
     arq.open("./fases/arquivosFases.txt", std::ifstream::in);
-    //cria arquivo e pilha de arquivos
+    //Cria arquivo e pilha de arquivos
     string auxArquivo;
     queue<string> filaArquivos;
-    while(arq >> auxArquivo) filaArquivos.push(auxArquivo); //le arquivos de fases
+    while(arq >> auxArquivo) filaArquivos.push(auxArquivo); //Le arquivos de fases
     arq.close();
     return filaArquivos;
 }
 
-Bola criaBola(int posY, int forma){//Função para cria uma bola
+//Função para criar uma bola
+Bola criaBola(int posY, int forma){
     Bola auxBola;
     auxBola.desenho = CriaAnimacao(bolas[forma], 0);    //Cria animação da bola
     auxBola.g       = C_PESO*(forma+1);                 //Calcula gravidade na bola
@@ -157,7 +170,8 @@ Bola criaBola(int posY, int forma){//Função para cria uma bola
     return auxBola;
 }
 
-Etapa *carregaEtapa(string arquivo){    //cria um Fase a partir de um arquivo texto
+//Cria um Fase a partir de um arquivo texto
+Etapa *carregaEtapa(string arquivo){
     Etapa *auxEtapa = (Etapa*) malloc(sizeof(Etapa));
     ifstream arq;
     arq.open(arquivo, std::ifstream::in);
@@ -167,7 +181,7 @@ Etapa *carregaEtapa(string arquivo){    //cria um Fase a partir de um arquivo te
     Fase *auxFase;
     char *textoTransicao;
     switch(auxEtapa->tipo){
-        case 0:
+        case 0://Cria fase
             auxFase = new Fase;
             arq >> posY >> forma;                       //l� posi��o e tipo da bola
             tempo = 0;                                  //reseta o tempo da fase
@@ -185,7 +199,7 @@ Etapa *carregaEtapa(string arquivo){    //cria um Fase a partir de um arquivo te
             }
             auxEtapa->item = auxFase;
             break;
-        case 1:
+        case 1://Cria transicao
             textoTransicao = (char*) malloc(50*sizeof(char));
             getline(arq, textoLido);
             strcpy(textoTransicao, textoLido.c_str());
@@ -196,6 +210,7 @@ Etapa *carregaEtapa(string arquivo){    //cria um Fase a partir de um arquivo te
     return auxEtapa;
 }
 
+//Funcao para iniciar as etapas
 Etapa *iniciaEtapa(Fase **fase, char **textoTransicao){
     Etapa *auxEtapa = carregaEtapa(arquivosEtapas.front());
     switch(auxEtapa->tipo){
@@ -209,8 +224,9 @@ Etapa *iniciaEtapa(Fase **fase, char **textoTransicao){
     return auxEtapa;
 }
 
+//Funcao para passar para proxima etapa
 Etapa *passaEtapa(Fase **fase, char **textoTransicao, Etapa *etapa){
-    if(arquivosEtapas.empty()) estado = false; //quebra loop
+    if(arquivosEtapas.empty()) estado = false;//Ao fim da fila de arquivos o jogo é finalizado
     else{
         arquivosEtapas.pop();
         if (etapa!=NULL) free(etapa);
@@ -227,6 +243,7 @@ Etapa *passaEtapa(Fase **fase, char **textoTransicao, Etapa *etapa){
     return etapa;
 }
 
+//Funcao para repetir uma Fase
 Etapa *repeteFase(Fase **fase, Etapa *etapa){
     delete etapa->item;
     free(etapa);
@@ -288,7 +305,6 @@ int main( int argc, char* args[] ){
     PlayBackground();   //Começa musica de fundo
 
     estado = JogoRodando();
-
     while(estado){
         //pega um evento que tenha ocorrido desde a última passada do loop
 

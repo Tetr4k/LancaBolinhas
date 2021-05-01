@@ -23,26 +23,22 @@ A janela do jogo será composta por uma interface e pela fase. Na interface esta
 
 Cada fase será definida pelo tipo da bola, cada uma terá tamanho e peso diferentes, e quantidade de alvos, com tamanhos e posições diferentes. Para concluir a fase, o jogador deverá acertar todos os alvos, ajustando o ângulo da bolinha. No momento anterior ao início de algumas fases, estarão presentes explicações do conteúdo e exemplos.
 
-## 2 - Utilização
+## 2 - Terceiros
 
-A PIG foi criada usando o Code blocks. Foram feitas algumas configurações de compilação através dessa IDE e até então é recomendado utilizar o mesmo. O arquivo do projeto pode ser encontrado em "./src".
-
-## 3 - Terceiros
-
-### 3.1 Musica de fundo
+### 2.1 Musica de fundo
 
 A musica de fundo foi baixada no site https://freemusicarchive.org/music/Kevin_MacLeod e adaptada para o jogo
 
-### 3.2 Audios
+### 2.2 Audios
 
 O audio de colisão foi baixado de https://www.youtube.com/watch?v=j4uCT4t9028 e adaptado para o jogo
 
 O audio de lançamento foi baixado de https://www.youtube.com/watch?v=1cA3t_DcfIg e adaptado para o jogo
 
-### 3.3 Sprites das bolas
+### 2.3 Sprites das bolas
 
 Os sprites foram baixados em https://www.spriters-resource.com/pc_computer/insaniquarium/sheet/19830/ e adaptados para o jogo
 
-### 3.4 Fonte
+### 2.4 Fonte
 
 A fonte foi baixada de https://fonts.google.com/specimen/Fredoka+One#standard-styles
